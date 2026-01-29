@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
 
-export default function Navbar() {
+export default function Navbar({ hidden = false }: { hidden?: boolean }) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -23,7 +23,7 @@ export default function Navbar() {
     return (
         <motion.nav
             initial={{ y: -100 }}
-            animate={{ y: 0 }}
+            animate={{ y: hidden ? -100 : 0 }}
             transition={{ duration: 0.5 }}
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none' : 'bg-transparent'
                 }`}
@@ -92,7 +92,7 @@ export default function Navbar() {
                 <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: '100vh' }}
-                    className="md:hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] pt-20"
+                    className="md:hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[60]"
                 >
                     <button
                         className="absolute top-6 right-4 text-white p-2"
@@ -102,7 +102,7 @@ export default function Navbar() {
                         <X size={32} />
                     </button>
 
-                    <div className="px-6 py-8 flex flex-col gap-8 items-center justify-center h-full">
+                    <div className="px-6 pb-8 pt-32 flex flex-col gap-8 items-center justify-start h-full overflow-y-auto">
                         {['Our Story', 'Flavors', 'Contact'].map((item) => (
                             <a
                                 key={item}

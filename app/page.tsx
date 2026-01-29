@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect, Suspense, useRef } from 'react';
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { ArrowRight, Leaf, Truck, RotateCcw, Box, Users, Factory, Globe, ShieldCheck, FileText, Phone, MessageCircle, Package, Award, TrendingUp, Ship } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import dynamic from 'next/dynamic';
+import ScrollTracker from '@/components/ScrollTracker';
 
 const ProductCandyScroll = dynamic(() => import('@/components/ProductCandyScroll'), {
   ssr: false,
@@ -94,7 +95,9 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const initialIndex = searchParams.get('product_index') ? parseInt(searchParams.get('product_index')!) : 0;
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [isCanvasActive, setIsCanvasActive] = useState(false);
   const product = products[currentIndex];
+
 
   useEffect(() => {
     if (searchParams.get('product_index')) {
@@ -118,30 +121,41 @@ function HomeContent() {
 
   return (
     <main className="bg-gray-50 dark:bg-black text-gray-900 dark:text-white selection:bg-lime-500 selection:text-white transition-colors duration-500">
-      <Navbar />
+      {/* Hide navbar when canvas is active */}
+      <Navbar hidden={isCanvasActive} />
 
-      {/* Navigation Controls */}
-      <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex gap-4 bg-white/80 dark:bg-white/10 backdrop-blur-md p-2 rounded-full border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-none transition-colors duration-500 w-[90%] md:w-auto overflow-x-auto justify-start md:justify-center no-scrollbar">
-        {products.map((p, idx) => {
-          const isActive = currentIndex === idx;
-          return (
-            <button
-              key={p.id}
-              onClick={() => setCurrentIndex(idx)}
-              style={{
-                backgroundColor: isActive ? p.themeColor : 'transparent',
-                color: isActive ? (p.id === 'chandan-mukhavas' ? 'white' : 'black') : '',
-              }}
-              className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${isActive
-                ? 'shadow-lg scale-105'
-                : 'text-gray-600 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
-                }`}
-            >
-              {p.name.split(' ')[0]}
-            </button>
-          );
-        })}
-      </div>
+      {/* Navigation Controls - Conditionally Visible */}
+      <AnimatePresence>
+        {isCanvasActive && (
+          <motion.div
+            initial={{ y: 100, opacity: 0, x: "-50%" }}
+            animate={{ y: 0, opacity: 1, x: "-50%" }}
+            exit={{ y: 100, opacity: 0, x: "-50%" }}
+            transition={{ duration: 0.5, ease: "backOut" }}
+            className="fixed bottom-10 left-1/2 z-50 flex gap-4 bg-white/80 dark:bg-white/10 backdrop-blur-md p-2 rounded-full border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-none transition-colors duration-500 w-[90%] md:w-auto overflow-x-auto justify-start md:justify-center no-scrollbar"
+          >
+            {products.map((p, idx) => {
+              const isActive = currentIndex === idx;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setCurrentIndex(idx)}
+                  style={{
+                    backgroundColor: isActive ? p.themeColor : 'transparent',
+                    color: isActive ? (p.id === 'chandan-mukhavas' ? 'white' : 'black') : '',
+                  }}
+                  className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${isActive
+                    ? 'shadow-lg scale-105'
+                    : 'text-gray-600 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
+                    }`}
+                >
+                  {p.name.split(' ')[0]}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
 
@@ -207,6 +221,8 @@ function HomeContent() {
         >
           {/* Hero / Scrollytelling Section */}
           <div className="relative">
+            <ScrollTracker onVisibilityChange={setIsCanvasActive} />
+
             {/* Gradient Background tied to product theme */}
             <div className={`absolute inset-0 bg-gradient-to-b ${product.gradient} pointer-events-none sticky top-0`} />
 

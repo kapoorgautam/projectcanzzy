@@ -117,7 +117,7 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
 
     return (
         <div ref={containerRef} className="h-[500vh] relative">
-            <div className="sticky top-[80px] h-screen w-full overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-500">
+            <div className="sticky top-[0px] h-screen w-full overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-500">
                 <div className={`absolute inset-0 opacity-100 bg-gradient-to-br ${product.gradient}`} />
                 <div className="absolute inset-0 bg-black/20" />
 
