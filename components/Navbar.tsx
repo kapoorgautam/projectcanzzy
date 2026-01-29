@@ -106,7 +106,7 @@ export default function Navbar() {
                         {['Our Story', 'Flavors', 'Contact'].map((item) => (
                             <a
                                 key={item}
-                                href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story' : `/#${item.toLowerCase()}`}
+                                href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story' : `/${item.toLowerCase()}`}
                                 className="text-3xl text-white font-bold tracking-tight hover:text-lime-400 transition-colors py-2"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
