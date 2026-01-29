@@ -47,24 +47,40 @@ export default function OurStoryPage() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1 }}
-                    className="min-h-[80vh] flex flex-col justify-center items-center text-center px-4"
+                    className="min-h-[60vh] md:min-h-[80vh] flex flex-col justify-center items-center text-center px-4"
                 >
-                    <span className="text-lime-600 dark:text-lime-400 font-bold tracking-[0.2em] uppercase mb-6 animate-pulse">Our Journey</span>
-                    <h1 className="text-6xl md:text-8xl font-black font-display mb-8 bg-clip-text text-transparent bg-gradient-to-r from-lime-500 via-yellow-400 to-orange-500 leading-tight">
+                    <span className="text-lime-600 dark:text-lime-400 font-bold tracking-[0.2em] uppercase mb-4 md:mb-6 animate-pulse text-sm md:text-base">Our Journey</span>
+                    <h1 className="text-5xl md:text-8xl font-black font-display mb-6 md:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-lime-500 via-yellow-400 to-orange-500 leading-tight">
                         The Tangy <br /> Revolution
                     </h1>
-                    <p className="text-2xl text-gray-600 dark:text-gray-300 max-w-2xl font-light">
+                    <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl font-light mb-10">
                         How we turned a childhood memory into a global obsession.
                     </p>
+
+                    {/* Stats Grid to fill space */}
+                    <div className="grid grid-cols-3 gap-4 md:gap-12 w-full max-w-3xl border-t border-gray-200 dark:border-white/10 pt-8 mt-4">
+                        <div className="flex flex-col items-center">
+                            <span className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white">2024</span>
+                            <span className="text-xs md:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Established</span>
+                        </div>
+                        <div className="flex flex-col items-center border-l border-r border-gray-200 dark:border-white/10 px-4">
+                            <span className="text-2xl md:text-4xl font-black text-lime-500">100%</span>
+                            <span className="text-xs md:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Authentic</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white">4+</span>
+                            <span className="text-xs md:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Signature Flavors</span>
+                        </div>
+                    </div>
                 </motion.div>
 
                 {/* Chapter 1: The Spark */}
-                <Section>
-                    <div className="w-20 h-20 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center mb-8 mx-auto">
-                        <Sparkles className="w-10 h-10 text-lime-600 dark:text-lime-400" />
+                <Section className="py-12 md:py-24">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center mb-6 md:mb-8 mx-auto">
+                        <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-lime-600 dark:text-lime-400" />
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-bold font-display mb-6">It Started with a Caving</h2>
-                    <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+                    <h2 className="text-3xl md:text-5xl font-bold font-display mb-4 md:mb-6 leading-tight">It Started with a Craving</h2>
+                    <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed px-2">
                         Remember waiting outside school gates for that one vendor who had the perfect raw mango candies?
                         <br /><br />
                         We did. But as we grew up, we realized that authentic tangy kick was missing from modern candy aisles.
@@ -72,20 +88,28 @@ export default function OurStoryPage() {
                     </p>
                 </Section>
 
+                {/* Divider Quote */}
+                <div className="py-8 md:py-16 text-center">
+                    <blockquote className="text-xl md:text-3xl font-serif italic text-gray-400 dark:text-gray-500">
+                        "Flavor is not just taste; it's a memory."
+                    </blockquote>
+                </div>
+
                 {/* Chapter 2: The Lab */}
-                <Section>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center text-left">
-                        <div className="order-2 md:order-1 relative group">
+                <Section className="py-12 md:py-24">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center text-left">
+                        <div className="order-2 md:order-1 relative group w-full">
                             <div className="absolute -inset-1 bg-gradient-to-r from-lime-600 to-yellow-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                            <div className="relative aspect-video bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center border border-gray-200 dark:border-white/10 p-8">
-                                <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-yellow-500">
-                                    100+ <br /> Recipes
+                            <div className="relative aspect-video bg-white dark:bg-gray-900 rounded-2xl flex flex-col items-center justify-center border border-gray-200 dark:border-white/10 p-4 md:p-8">
+                                <h3 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-yellow-500 text-center">
+                                    300+ <br /> Taste Tests
                                 </h3>
+                                <p className="text-sm text-gray-500 mt-2 font-mono">Failed iterations included.</p>
                             </div>
                         </div>
                         <div className="order-1 md:order-2">
-                            <h2 className="text-4xl md:text-5xl font-bold font-display mb-6">Kitchen Experiments</h2>
-                            <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                            <h2 className="text-3xl md:text-5xl font-bold font-display mb-4 md:mb-6">Kitchen Experiments</h2>
+                            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
                                 We didn&apos;t want &quot;mango flavor&quot;. We wanted <strong>Kaccha Mango</strong>.
                                 We spent months sourcing real fruit extracts, experimenting with natural spices, and perfecting the balance between sun-dried tang and sugary delight.
                             </p>
