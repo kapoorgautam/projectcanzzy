@@ -6,10 +6,12 @@ import { useState } from 'react';
 export default function Footer() {
     const [newsletterEmail, setNewsletterEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('submitting');
+        setErrorMessage('');
 
         try {
             const response = await fetch('/api/email', {
@@ -18,14 +20,18 @@ export default function Footer() {
                 body: JSON.stringify({ type: 'newsletter', data: { email: newsletterEmail } }),
             });
 
+            const result = await response.json();
+
             if (response.ok) {
                 setStatus('success');
                 setNewsletterEmail('');
             } else {
                 setStatus('error');
+                setErrorMessage(result.error || 'Subscription failed. Try again.');
             }
         } catch (error) {
             setStatus('error');
+            setErrorMessage('Network error. Please help.');
         }
     };
 
@@ -96,6 +102,9 @@ export default function Footer() {
                                     </>
                                 ) : 'Subscribe'}
                             </button>
+                            {status === 'error' && (
+                                <p className="text-red-500 text-xs font-bold mt-1">{errorMessage}</p>
+                            )}
                         </form>
                     </div>
                 </div>
@@ -108,6 +117,6 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer >
     );
 }

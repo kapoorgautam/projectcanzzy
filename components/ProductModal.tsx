@@ -13,12 +13,14 @@ interface ProductModalProps {
 
 export default function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
     const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormStatus('submitting');
+        setErrorMessage('');
 
         const formData = new FormData(e.target as HTMLFormElement);
         const data = {
@@ -36,6 +38,8 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 body: JSON.stringify({ type: 'inquiry', data }),
             });
 
+            const result = await response.json();
+
             if (response.ok) {
                 setFormStatus('success');
                 setTimeout(() => {
@@ -44,9 +48,11 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 }, 3000);
             } else {
                 setFormStatus('error');
+                setErrorMessage(result.error || 'Failed to send. Please try again.');
             }
         } catch (error) {
             setFormStatus('error');
+            setErrorMessage('Network error. Please check your connection.');
         }
     };
 
@@ -186,7 +192,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                                 {!formStatus && <Send size={18} />}
                                             </button>
                                             {formStatus === 'error' && (
-                                                <p className="text-red-500 text-xs text-center mt-2">Failed to send. Please try again.</p>
+                                                <p className="text-red-500 text-xs text-center mt-2 font-bold">{errorMessage}</p>
                                             )}
                                         </form>
                                     )}

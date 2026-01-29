@@ -4,6 +4,18 @@ import nodemailer from 'nodemailer';
 export async function POST(request: Request) {
     const { type, data } = await request.json();
 
+    // Server-Side Validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!data.email || !emailRegex.test(data.email)) {
+        return NextResponse.json({ success: false, error: 'Invalid email address' }, { status: 400 });
+    }
+
+    if (data.phone && !phoneRegex.test(data.phone)) {
+        return NextResponse.json({ success: false, error: 'Invalid phone number (must be 10 digits)' }, { status: 400 });
+    }
+
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
         console.error('Missing environment variables: EMAIL_USER or EMAIL_PASS');
         return NextResponse.json({ success: false, error: 'Server configuration error' }, { status: 500 });

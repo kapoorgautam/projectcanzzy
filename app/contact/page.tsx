@@ -12,10 +12,12 @@ type InquiryType = 'general' | 'bulk' | 'custom';
 export default function ContactPage() {
     const [inquiryType, setInquiryType] = useState<InquiryType>('general');
     const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormStatus('submitting');
+        setErrorMessage('');
 
         const formData = new FormData(e.target as HTMLFormElement);
         const data = {
@@ -35,13 +37,17 @@ export default function ContactPage() {
                 body: JSON.stringify({ type: 'contact', data }),
             });
 
+            const result = await response.json();
+
             if (response.ok) {
                 setFormStatus('success');
             } else {
                 setFormStatus('error');
+                setErrorMessage(result.error || 'Failed to send. Please try again.');
             }
         } catch (error) {
             setFormStatus('error');
+            setErrorMessage('Failed to send. Please check your connection.');
         }
     };
 
@@ -303,7 +309,7 @@ export default function ContactPage() {
                                     {formStatus === 'error' && (
                                         <div className="flex items-center gap-2 justify-center text-red-500">
                                             <AlertCircle size={18} />
-                                            <p className="text-sm font-bold">Failed to send. Please check your connection.</p>
+                                            <p className="text-sm font-bold">{errorMessage}</p>
                                         </div>
                                     )}
                                 </form>
@@ -313,7 +319,6 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Bottom Gradient Connection */}
             <div className="w-full h-32 bg-gradient-to-t from-lime-500/10 to-transparent pointer-events-none -mt-32 relative z-0" />
 
             <Footer />
