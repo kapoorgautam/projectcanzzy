@@ -24,6 +24,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
         const data = {
             productName: product.name,
             name: formData.get('name'),
+            phone: formData.get('phone'),
             email: formData.get('email'),
             message: formData.get('message'),
         };
@@ -143,11 +144,25 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                                 />
                                             </div>
                                             <div>
+                                                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Phone Number</label>
+                                                <input
+                                                    name="phone"
+                                                    required
+                                                    type="tel"
+                                                    pattern="^[0-9]{10}$"
+                                                    title="Please enter a valid 10-digit phone number"
+                                                    placeholder="9876543210"
+                                                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-lime-500 transition-colors"
+                                                />
+                                            </div>
+                                            <div>
                                                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Email</label>
                                                 <input
                                                     name="email"
                                                     required
                                                     type="email"
+                                                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                                    title="Please enter a valid email address"
                                                     placeholder="your@email.com"
                                                     className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-lime-500 transition-colors"
                                                 />

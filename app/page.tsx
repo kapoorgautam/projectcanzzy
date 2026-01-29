@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { ArrowRight, Leaf, Truck, RotateCcw, Box, Users, Factory, Globe, ShieldCheck, FileText, Phone, MessageCircle, Package, Award, TrendingUp, Ship } from 'lucide-react';
@@ -132,7 +133,7 @@ function HomeContent() {
             animate={{ y: 0, opacity: 1, x: "-50%" }}
             exit={{ y: 100, opacity: 0, x: "-50%" }}
             transition={{ duration: 0.5, ease: "backOut" }}
-            className="fixed bottom-10 left-1/2 z-50 flex gap-4 bg-white/80 dark:bg-white/10 backdrop-blur-md p-2 rounded-full border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-none transition-colors duration-500 w-[90%] md:w-auto overflow-x-auto justify-start md:justify-center no-scrollbar"
+            className="fixed bottom-6 left-1/2 z-50 flex gap-2 sm:gap-4 bg-white/90 dark:bg-black/90 backdrop-blur-xl p-2 rounded-full border border-gray-200 dark:border-white/10 shadow-2xl transition-all duration-500 w-[95%] sm:w-auto max-w-2xl overflow-x-auto justify-start sm:justify-center no-scrollbar"
           >
             {products.map((p, idx) => {
               const isActive = currentIndex === idx;
@@ -142,11 +143,11 @@ function HomeContent() {
                   onClick={() => setCurrentIndex(idx)}
                   style={{
                     backgroundColor: isActive ? p.themeColor : 'transparent',
-                    color: isActive ? (p.id === 'chandan-mukhavas' ? 'white' : 'black') : '',
+                    color: isActive ? (['chandan-mukhavas', 'kaccha-mango', 'orange-blast', 'mix-fruit'].includes(p.id) ? 'white' : 'black') : '',
                   }}
-                  className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${isActive
-                    ? 'shadow-lg scale-105'
-                    : 'text-gray-600 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
+                  className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${isActive
+                    ? 'shadow-lg scale-100'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10'
                     }`}
                 >
                   {p.name.split(' ')[0]}
@@ -197,16 +198,19 @@ function HomeContent() {
             Authentic Indian flavors crafted for the modern palate. Experience the nostalgia, modernized.
           </motion.p>
 
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-            className="group w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-base sm:text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3 mx-auto"
           >
-            Explore Flavors
-            <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-          </motion.button>
+            <Link
+              href="/flavors"
+              className="group w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-base sm:text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3 mx-auto inline-flex"
+            >
+              Explore Flavors
+              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -266,9 +270,9 @@ function HomeContent() {
                   <li className="flex items-center gap-3 text-base sm:text-lg text-gray-600 dark:text-gray-300"><div className="w-2 h-2 bg-lime-500 rounded-full shrink-0" /> Fresh & Safe Products</li>
                 </ul>
                 {/* Since we removed individual product switching here, this could link to a catalog page or anchor to the canvas */}
-                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-lime-600 dark:text-lime-400 font-bold hover:underline text-lg py-2">
+                <Link href="/flavors" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-lime-600 dark:text-lime-400 font-bold hover:underline text-lg py-2">
                   Explore Products <ArrowRight size={20} />
-                </button>
+                </Link>
               </div>
             </div>
           </section>

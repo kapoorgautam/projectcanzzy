@@ -29,9 +29,9 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
+                <div className="relative flex items-center justify-between h-20">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 group">
+                    <Link href="/" className="flex items-center gap-2 group z-10">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-lime-400 to-yellow-400 flex items-center justify-center animate-spin-slow group-hover:scale-110 transition-transform">
                             <span className="text-black font-bold text-xs">C</span>
                         </div>
@@ -40,27 +40,20 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
                         </span>
                     </Link>
 
-                    {/* Desktop Links */}
-                    <div className="hidden md:flex items-center gap-8">
+                    {/* Desktop Links - Centered */}
+                    <div className="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center gap-8">
                         {[
-                            // 'Shop'
-                            'Our Story', 'Flavors'].map((item) => (
+                            'Our Story', 'Flavors', 'Contact'].map((item) => (
                                 <a
                                     key={item}
                                     href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story'
-                                        // : item === 'Shop' ? '/shop'
-                                        : `/#${item.toLowerCase()}`}
+                                        : item === 'Contact' ? '/contact'
+                                            : `/#${item.toLowerCase()}`}
                                     className="text-gray-700 dark:text-white/80 hover:text-lime-600 dark:hover:text-lime-400 transition-colors text-sm font-medium tracking-wide uppercase"
                                 >
                                     {item}
                                 </a>
                             ))}
-                        <Link
-                            href="/contact"
-                            className="text-gray-700 dark:text-white/80 hover:text-lime-600 dark:hover:text-lime-400 transition-colors text-sm font-medium tracking-wide uppercase"
-                        >
-                            Contact
-                        </Link>
                     </div>
 
                     {/* Actions */}

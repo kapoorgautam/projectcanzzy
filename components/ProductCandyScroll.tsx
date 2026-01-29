@@ -55,44 +55,66 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
     }, [product.folderPath, frameCount]);
 
     useEffect(() => {
-        // Run canvas logic only if NOT mobile and loaded
+        // Run canvas logic only if loaded
         if (!loaded || !canvasRef.current || images.length === 0) return;
 
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true }); // Optimize for alpha if needed
         if (!ctx) return;
 
-        const dpr = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
+        // Enable high-quality scaling
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1; // Cap DPR at 2 for performance
         let rafId: number;
+        let lastFrameIndex = -1;
 
         const resizeCanvas = () => {
             const parent = canvas.parentElement;
             if (!parent) return;
             const width = parent.clientWidth;
             const height = parent.clientHeight;
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
-            canvas.width = Math.floor(width * dpr);
-            canvas.height = Math.floor(height * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            // Only update if dimensions actually changed to avoid flicker
+            if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+                canvas.style.width = `${width}px`;
+                canvas.style.height = `${height}px`;
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                lastFrameIndex = -1; // Force redraw
+            }
         };
 
         const drawFrame = () => {
+            // Get current scroll-based frame
+            const rawIndex = frameIndex.get();
             const index = Math.min(
                 frameCount - 1,
-                Math.floor(frameIndex.get() || 0)
+                Math.max(0, Math.floor(rawIndex))
             );
+
+            // Optimization: Only redraw if frame changed
+            if (index === lastFrameIndex) return;
+            lastFrameIndex = index;
+
             const img = images[index];
             if (!img) return;
 
             const cw = canvas.width / dpr;
             const ch = canvas.height / dpr;
+
+            // Clear only if transparent images (not strictly necessary if filling screen, but safer)
             ctx.clearRect(0, 0, cw, ch);
+
+            // 'cover' fit logic
             const scale = Math.max(cw / img.width, ch / img.height);
             const drawWidth = img.width * scale;
             const drawHeight = img.height * scale;
             const offsetX = (cw - drawWidth) / 2;
             const offsetY = (ch - drawHeight) / 2;
+
             ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
         };
 
@@ -101,17 +123,25 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
             rafId = requestAnimationFrame(render);
         };
 
+        // Initial setup
         resizeCanvas();
         render();
 
-        const resizeObserver = new ResizeObserver(resizeCanvas);
+        const resizeObserver = new ResizeObserver(() => {
+            resizeCanvas();
+            drawFrame(); // Draw immediately on resize
+        });
+
         if (containerRef.current) {
             resizeObserver.observe(containerRef.current);
         }
 
+        window.addEventListener('resize', resizeCanvas);
+
         return () => {
             cancelAnimationFrame(rafId);
             resizeObserver.disconnect();
+            window.removeEventListener('resize', resizeCanvas);
         };
     }, [loaded, images, frameIndex, frameCount]);
 
