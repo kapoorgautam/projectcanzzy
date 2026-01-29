@@ -4,7 +4,7 @@ import { useScroll, useTransform, MotionValue } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Product } from '@/data/products';
 import BackgroundParticles from './BackgroundParticles';
-import NextImage from 'next/image';
+
 
 interface ProductCandyScrollProps {
     product: Product;
@@ -17,19 +17,7 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
     const [loaded, setLoaded] = useState(false);
     const frameCount = product.frameCount;
 
-    const [isMobile, setIsMobile] = useState(false);
 
-    useEffect(() => {
-        const checkMobile = () => {
-            if (typeof window !== 'undefined') {
-                setIsMobile(window.innerWidth < 768);
-            }
-        };
-
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -42,11 +30,6 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
 
     // Load images only if NOT mobile
     useEffect(() => {
-        if (isMobile) {
-            setLoaded(true);
-            return;
-        }
-
         const loadImages = async () => {
             const imgs: HTMLImageElement[] = [];
             const promises = [];
@@ -69,11 +52,11 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
         };
 
         loadImages();
-    }, [product.folderPath, frameCount, isMobile]);
+    }, [product.folderPath, frameCount]);
 
     useEffect(() => {
         // Run canvas logic only if NOT mobile and loaded
-        if (isMobile || !loaded || !canvasRef.current || images.length === 0) return;
+        if (!loaded || !canvasRef.current || images.length === 0) return;
 
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -130,11 +113,7 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
             cancelAnimationFrame(rafId);
             resizeObserver.disconnect();
         };
-    }, [loaded, images, frameIndex, isMobile, frameCount]);
-
-    // Static Image Fallback for Mobile (using last frame or product image)
-    // We use a regular img tag for simplicity or the last frame
-    const staticImageSrc = `${product.folderPath}/${product.frameCount}.jpg`;
+    }, [loaded, images, frameIndex, frameCount]);
 
     return (
         <div ref={containerRef} className="h-[500vh] relative">
@@ -142,32 +121,15 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
                 <div className={`absolute inset-0 opacity-100 bg-gradient-to-br ${product.gradient}`} />
                 <div className="absolute inset-0 bg-black/20" />
 
-                {isMobile ? (
-                    // Mobile: Static Image
-                    <div className="relative z-10 w-full h-full">
-                        <NextImage
-                            src={staticImageSrc}
-                            alt={product.name}
-                            className="object-cover"
-                            fill
-                            sizes="100vw"
-                            priority
-                        />
+                <BackgroundParticles themeColor={product.themeColor} />
+                <canvas
+                    ref={canvasRef}
+                    className="w-full h-full object-cover max-w-[100vw] max-h-[100vh] relative z-10"
+                />
+                {!loaded && (
+                    <div className="absolute inset-0 flex items-center justify-center text-white z-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lime-500"></div>
                     </div>
-                ) : (
-                    // Desktop: Canvas
-                    <>
-                        <BackgroundParticles themeColor={product.themeColor} />
-                        <canvas
-                            ref={canvasRef}
-                            className="w-full h-full object-cover max-w-[100vw] max-h-[100vh] relative z-10"
-                        />
-                        {!loaded && (
-                            <div className="absolute inset-0 flex items-center justify-center text-white z-20">
-                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lime-500"></div>
-                            </div>
-                        )}
-                    </>
                 )}
             </div>
         </div>
