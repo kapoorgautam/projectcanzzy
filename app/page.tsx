@@ -39,7 +39,7 @@ const SeamlessExportSection = () => {
     <section ref={ref} className="py-12 md:py-24 bg-white dark:bg-black relative z-20">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Seamless Export Process</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 relative">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-8 relative">
           {/* Background Line */}
           <div className="hidden lg:block absolute top-12 left-0 right-0 h-1 bg-gray-100 dark:bg-white/10 -z-10">
             <motion.div
@@ -77,14 +77,14 @@ const StepItem = ({ step, index, total, progress }: { step: any, index: number, 
   // I will assume light mode base for now or just picked a safe neutral gray.
 
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center text-center p-2">
       <motion.div
         style={{ borderColor, color: iconColor }}
-        className="w-20 h-20 sm:w-24 sm:h-24 bg-white dark:bg-zinc-900 border-4 rounded-full flex items-center justify-center mb-4 sm:mb-6 z-10 transition-colors"
+        className="w-16 h-16 sm:w-24 sm:h-24 bg-white dark:bg-zinc-900 border-4 rounded-full flex items-center justify-center mb-3 sm:mb-6 z-10 transition-colors"
       >
-        <step.icon size={28} className="sm:w-8 sm:h-8" />
+        <step.icon size={24} className="sm:w-8 sm:h-8" />
       </motion.div>
-      <h4 className="font-bold text-lg text-gray-900 dark:text-white">{step.title}</h4>
+      <h4 className="font-bold text-sm sm:text-lg text-gray-900 dark:text-white leading-tight">{step.title}</h4>
     </div>
   );
 }
@@ -121,7 +121,7 @@ function HomeContent() {
       <Navbar />
 
       {/* Navigation Controls */}
-      <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex gap-4 bg-white/80 dark:bg-white/10 backdrop-blur-md p-2 rounded-full border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-none transition-colors duration-500">
+      <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex gap-4 bg-white/80 dark:bg-white/10 backdrop-blur-md p-2 rounded-full border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-none transition-colors duration-500 w-[90%] md:w-auto overflow-x-auto justify-start md:justify-center no-scrollbar">
         {products.map((p, idx) => {
           const isActive = currentIndex === idx;
           return (
@@ -132,7 +132,7 @@ function HomeContent() {
                 backgroundColor: isActive ? p.themeColor : 'transparent',
                 color: isActive ? (p.id === 'chandan-mukhavas' ? 'white' : 'black') : '',
               }}
-              className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 ${isActive
+              className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${isActive
                 ? 'shadow-lg scale-105'
                 : 'text-gray-600 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
                 }`}
@@ -264,7 +264,7 @@ function HomeContent() {
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">Why Global Buyers Choose CANZZY</h2>
                 <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400">Trusted by importers across 5 continents.</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                 {[
                   { icon: Globe, title: "Global Export Experience", desc: "Successfully exporting to USA, UK, UAE & Africa." },
                   { icon: ShieldCheck, title: "Strict Quality Control", desc: "FSSAI, ISO & HACCP compliant manufacturing." },
@@ -274,11 +274,11 @@ function HomeContent() {
                   { icon: Truck, title: "Reliable Supply Chain", desc: "On-time delivery and logistics support." }
                 ].map((item, i) => (
                   <div key={i} className="flex flex-col items-center text-center p-6 bg-white dark:bg-black/50 md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white dark:bg-black rounded-full shadow-sm flex items-center justify-center text-lime-600 dark:text-lime-500 mb-4 sm:mb-6">
-                      <item.icon size={28} className="sm:w-8 sm:h-8" />
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white dark:bg-black rounded-full shadow-sm flex items-center justify-center text-lime-600 dark:text-lime-500 mb-4 sm:mb-6">
+                      <item.icon size={24} className="sm:w-8 sm:h-8" />
                     </div>
-                    <h4 className="text-lg sm:text-xl font-bold mb-2 text-gray-900 dark:text-white">{item.title}</h4>
-                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">{item.desc}</p>
+                    <h4 className="text-sm sm:text-xl font-bold mb-2 text-gray-900 dark:text-white leading-tight">{item.title}</h4>
+                    <p className="text-xs sm:text-base text-gray-500 dark:text-gray-400 hidden sm:block">{item.desc}</p>
                   </div>
                 ))}
               </div>
