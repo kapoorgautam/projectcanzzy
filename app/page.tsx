@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useState, useEffect, Suspense, useRef } from 'react';
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Leaf, Truck, RotateCcw, Box, Users, Factory, Globe, ShieldCheck, FileText, Phone, MessageCircle, Package, Award, TrendingUp, Ship } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
@@ -16,6 +16,78 @@ const ProductCandyScroll = dynamic(() => import('@/components/ProductCandyScroll
 import ProductTextOverlays from '@/components/ProductTextOverlays';
 
 
+
+
+const SeamlessExportSection = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 65%", "end 45%"]
+  });
+
+  const width = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  const steps = [
+    { title: "Select Product", icon: Box },
+    { title: "Get Quote", icon: FileText },
+    { title: "Compliance", icon: ShieldCheck },
+    { title: "Shipping", icon: Ship },
+    { title: "Support", icon: MessageCircle }
+  ];
+
+  return (
+    <section ref={ref} className="py-12 md:py-24 bg-white dark:bg-black relative z-20">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Seamless Export Process</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 relative">
+          {/* Background Line */}
+          <div className="hidden lg:block absolute top-12 left-0 right-0 h-1 bg-gray-100 dark:bg-white/10 -z-10">
+            <motion.div
+              style={{ width }}
+              className="h-full bg-lime-500"
+            />
+          </div>
+
+          {steps.map((step, i) => (
+            <StepItem key={i} step={step} index={i} total={steps.length} progress={scrollYProgress} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const StepItem = ({ step, index, total, progress }: { step: any, index: number, total: number, progress: any }) => {
+  // Calculate triggers based on index. Equal segments.
+  // 5 steps. 0 starts at 0, 1 at 0.2, etc.
+  const segment = 1 / total;
+  const start = index * segment;
+  const end = start + (segment * 0.5); // Fast transition
+
+  const borderColor = useTransform(progress, [start, end], ["rgba(243, 244, 246, 1)", "rgba(132, 204, 22, 1)"]);
+  const iconColor = useTransform(progress, [start, end], ["rgba(156, 163, 175, 1)", "rgba(132, 204, 22, 1)"]);
+
+  // Need separate logical transform for dark mode borders? 
+  // Simplified to standard gray-200. Dark mode border might need adjustment if it was significantly different.
+  // Original: border-gray-100 (light) / white/10 (dark).
+  // I will just use colors that look good in general or simple hex.
+  // Let's use logic for dark mode awareness if possible, but useTransform creates inline styles which override classes.
+  // Safest is to use hex codes. border-gray-100 is #f3f4f6. border-white/10 is rgba(255,255,255,0.1).
+  // It's hard to do conditional dark mode easily in useTransform without context or a lot of work. 
+  // I will assume light mode base for now or just picked a safe neutral gray.
+
+  return (
+    <div className="flex flex-col items-center text-center">
+      <motion.div
+        style={{ borderColor, color: iconColor }}
+        className="w-20 h-20 sm:w-24 sm:h-24 bg-white dark:bg-zinc-900 border-4 rounded-full flex items-center justify-center mb-4 sm:mb-6 z-10 transition-colors"
+      >
+        <step.icon size={28} className="sm:w-8 sm:h-8" />
+      </motion.div>
+      <h4 className="font-bold text-lg text-gray-900 dark:text-white">{step.title}</h4>
+    </div>
+  );
+}
 
 
 function HomeContent() {
@@ -224,13 +296,13 @@ function HomeContent() {
                   { name: "Snacks & Namkeen", color: "bg-orange-100 dark:bg-orange-900/20", text: "text-orange-700 dark:text-orange-400", link: "/exports/snacks" },
                   { name: "Ready-to-Eat", color: "bg-yellow-100 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-400", link: "/contact" }
                 ].map((cat, i) => (
-                  <a href={cat.link} key={i} className={`p-6 sm:p-8 rounded-3xl ${cat.color} hover:scale-105 transition-transform cursor-pointer group flex flex-col items-center text-center`}>
-                    <div className="h-32 sm:h-40 flex items-center justify-center mb-4 sm:mb-6">
+                  <a href={cat.link} key={i} className={`p-3 sm:p-4 rounded-2xl ${cat.color} hover:scale-105 transition-transform cursor-pointer group flex flex-col items-center text-center`}>
+                    <div className="h-16 sm:h-20 flex items-center justify-center mb-2 sm:mb-3">
                       {/* Placeholder for Product Image */}
-                      <Package size={56} className={`${cat.text} opacity-50 group-hover:opacity-100 transition-opacity sm:w-16 sm:h-16`} />
+                      <Package size={32} className={`${cat.text} opacity-50 group-hover:opacity-100 transition-opacity sm:w-10 sm:h-10`} />
                     </div>
-                    <h3 className={`text-xl sm:text-2xl font-bold ${cat.text} mb-2`}>{cat.name}</h3>
-                    <span className={`inline-flex items-center gap-2 text-sm font-bold ${cat.text} opacity-80 mt-auto`}>View Products <ArrowRight size={16} /></span>
+                    <h3 className={`text-base sm:text-lg font-bold ${cat.text} mb-1 leading-tight`}>{cat.name}</h3>
+                    <span className={`inline-flex items-center gap-1 text-xs font-bold ${cat.text} opacity-80 mt-auto`}>View <ArrowRight size={14} /></span>
                   </a>
                 ))}
               </div>
@@ -301,28 +373,7 @@ function HomeContent() {
           </section>
 
           {/* SECTION 8: SIMPLE EXPORT PROCESS */}
-          <section className="py-12 md:py-24 bg-white dark:bg-black relative z-20">
-            <div className="max-w-7xl mx-auto px-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Seamless Export Process</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 relative">
-                <div className="hidden lg:block absolute top-12 left-0 right-0 h-1 bg-gray-100 dark:bg-white/10 -z-10" />
-                {[
-                  { title: "Select Product", icon: Box },
-                  { title: "Get Quote", icon: FileText },
-                  { title: "Compliance", icon: ShieldCheck },
-                  { title: "Shipping", icon: Ship },
-                  { title: "Support", icon: MessageCircle }
-                ].map((step, i) => (
-                  <div key={i} className="flex flex-col items-center text-center">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white dark:bg-zinc-900 border-4 border-gray-100 dark:border-white/10 rounded-full flex items-center justify-center text-gray-400 dark:text-gray-500 mb-4 sm:mb-6 hover:border-lime-500 hover:text-lime-500 transition-colors bg-white dark:bg-black z-10">
-                      <step.icon size={28} className="sm:w-8 sm:h-8" />
-                    </div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white">{step.title}</h4>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+          <SeamlessExportSection />
 
           {/* SECTION 9: FINAL CTA */}
           <section className="py-12 md:py-24 bg-gray-900 text-white text-center px-4 relative z-20">

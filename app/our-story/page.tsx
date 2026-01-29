@@ -114,16 +114,16 @@ export default function OurStoryPage() {
                 </Section>
 
                 {/* Chapter 4: The Vision */}
-                <Section>
-                    <div className="bg-black dark:bg-white text-white dark:text-black rounded-[3rem] p-12 md:p-24 w-full">
-                        <div className="w-20 h-20 bg-white/20 dark:bg-black/10 rounded-full flex items-center justify-center mb-8 mx-auto backdrop-blur-sm">
-                            <Rocket className="w-10 h-10" />
+                <Section className="min-h-0 py-6 md:py-10">
+                    <div className="bg-black dark:bg-white text-white dark:text-black rounded-[2rem] p-6 md:p-10 w-full">
+                        <div className="w-12 h-12 bg-white/20 dark:bg-black/10 rounded-full flex items-center justify-center mb-4 mx-auto backdrop-blur-sm">
+                            <Rocket className="w-6 h-6" />
                         </div>
-                        <h2 className="text-4xl md:text-6xl font-black font-display mb-8">Taking Local Global</h2>
-                        <p className="text-xl md:text-2xl opacity-80 max-w-3xl mx-auto leading-relaxed mb-12">
+                        <h2 className="text-2xl md:text-4xl font-black font-display mb-4">Taking Local Global</h2>
+                        <p className="text-base md:text-lg opacity-80 max-w-2xl mx-auto leading-relaxed mb-6">
                             What started in a small kitchen is now a revolution. We are taking the authentic tastes of India—the chatpata, the khatta, the meetha—to the world stage.
                         </p>
-                        <Globe className="w-32 h-32 mx-auto opacity-20 animate-pulse" />
+                        <Globe className="w-16 h-16 mx-auto opacity-20 animate-pulse" />
                     </div>
                 </Section>
 

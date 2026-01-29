@@ -20,17 +20,18 @@ function ProductCard({ product, index, onClick }: { product: Product; index: num
             {/* Card Decoration Gradient */}
             <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${product.gradient}`} />
 
-            <div className="p-8 flex flex-col flex-grow">
-                {/* Visual Placeholder */}
-                <div className={`aspect-square mb-8 rounded-2xl bg-gradient-to-br ${product.gradient} opacity-20 group-hover:opacity-30 transition-opacity flex items-center justify-center relative overflow-hidden`}>
+            <div className="p-6 flex flex-col flex-grow">
+                {/* Visual Placeholder - Reduced height */}
+                <div className={`w-full h-48 mb-6 rounded-2xl bg-gradient-to-br ${product.gradient} opacity-20 group-hover:opacity-30 transition-opacity flex items-center justify-center relative overflow-hidden`}>
                     <div className={`absolute inset-0 bg-${product.themeColor.replace('#', '')} blur-3xl opacity-20`}></div>
-                    <ShoppingBag className={`w-16 h-16`} style={{ color: product.themeColor }} />
+                    <ShoppingBag className={`w-12 h-12`} style={{ color: product.themeColor }} />
                 </div>
 
+                {/* Restored Text Sizes */}
                 <h3 className="text-3xl font-bold mb-2 font-display text-gray-900 dark:text-white">{product.name}</h3>
                 <p className="text-lime-600 dark:text-lime-400 font-medium mb-4 text-sm uppercase tracking-wider font-sans">{product.subName}</p>
 
-                <p className="text-gray-600 dark:text-gray-400 mb-8 line-clamp-3 font-sans flex-grow">
+                <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-3 font-sans flex-grow">
                     {product.description}
                 </p>
 
