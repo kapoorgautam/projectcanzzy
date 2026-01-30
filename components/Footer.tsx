@@ -44,7 +44,7 @@ export default function Footer() {
                             CANZZY
                         </h2>
                         <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-sm mb-6 md:mb-8">
-                            Revolutionizing the candy industry with authentic flavors, premium ingredients, and a tangy twist that keeps you coming back for more.
+                            Revolutionizing the industry with authentic candies, premium mouth fresheners, and a tangy twist that keeps you coming back for more.
                         </p>
                         <div className="flex gap-4">
                             {[Facebook, Instagram, Twitter].map((Icon, i) => (

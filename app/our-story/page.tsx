@@ -54,7 +54,7 @@ export default function OurStoryPage() {
                         The Tangy <br /> Revolution
                     </h1>
                     <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl font-light mb-10">
-                        How we turned a childhood memory into a global obsession.
+                        How we turned a childhood memory into a global obsession for candies and freshners.
                     </p>
 
                     {/* Stats Grid to fill space */}
@@ -81,9 +81,9 @@ export default function OurStoryPage() {
                     </div>
                     <h2 className="text-3xl md:text-5xl font-bold font-display mb-4 md:mb-6 leading-tight">It Started with a Craving</h2>
                     <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed px-2">
-                        Remember waiting outside school gates for that one vendor who had the perfect raw mango candies?
+                        Remember waiting outside school gates for that one vendor who had the perfect raw mango candies? Or the refreshing fennel seeds after a family dinner?
                         <br /><br />
-                        We did. But as we grew up, we realized that authentic tangy kick was missing from modern candy aisles.
+                        We did. But as we grew up, we realized that authentic tangy kick and fresh aroma was missing from modern aisles.
                         Everything was too sweet, too artificial, or just plain boring. We missed the <strong>zing</strong>.
                     </p>
                 </Section>

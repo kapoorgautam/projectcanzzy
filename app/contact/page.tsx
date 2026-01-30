@@ -65,7 +65,7 @@ export default function ContactPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6"
                     >
-                        Let&apos;s Talk <span className="text-lime-600 dark:text-lime-500">Candy</span>
+                        Let&apos;s Talk <span className="text-lime-600 dark:text-lime-500">Mithaas</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -73,7 +73,7 @@ export default function ContactPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
                     >
-                        Whether you want to stock your shelves, customize a flavor for your event, or just say hello — we&apos;re all ears.
+                        Whether you want to stock your shelves with our candies, customize a mouth freshener, or just say hello — we&apos;re all ears.
                     </motion.p>
                 </div>
             </section>
@@ -276,7 +276,7 @@ export default function ContactPage() {
                                                 <FlaskConical size={16} /> Flavor Lab
                                             </h5>
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                Describe the flavor profile you&apos;re looking for (e.g., &quot;Spicy Guava&quot; or &quot;Sweet Tamarind&quot;). Our chefs will work with you to create a prototype.
+                                                Describe the flavor profile you&apos;re looking for (e.g., &quot;Spicy Guava Candy&quot; or &quot;Rose Mint Freshener&quot;). Our chefs will work with you to create a prototype.
                                             </p>
                                         </div>
                                     )}

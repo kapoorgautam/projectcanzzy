@@ -77,7 +77,7 @@ export default function FlavorsPage() {
                         Our Flavors
                     </h1>
                     <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-sans">
-                        Discover the tangy revolution. Every flavor is a journey back to the good old days, with a modern twist.
+                        Discover the tangy revolution. From nostalgic candies to premium mouth fresheners, every flavor is a journey back to the good old days.
                     </p>
                 </motion.div>
 

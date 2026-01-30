@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
-import { ArrowRight, Leaf, Truck, RotateCcw, Box, Users, Factory, Globe, ShieldCheck, FileText, Phone, MessageCircle, Package, Award, TrendingUp, Ship } from 'lucide-react';
+import { ArrowRight, Leaf, Truck, RotateCcw, Box, Users, Factory, Globe, ShieldCheck, FileText, Phone, MessageCircle, Package, Award, TrendingUp, Ship, Candy, IceCream, Smile, Heart, Star } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
 import Navbar from '@/components/Navbar';
@@ -30,17 +30,17 @@ const SeamlessExportSection = () => {
   const width = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   const steps = [
-    { title: "Select Product", icon: Box },
-    { title: "Get Quote", icon: FileText },
-    { title: "Compliance", icon: ShieldCheck },
-    { title: "Shipping", icon: Ship },
-    { title: "Support", icon: MessageCircle }
+    { title: "Pick Your Flavor", icon: Candy },
+    { title: "Taste The Samples", icon: Smile },
+    { title: "Safe Ingredients", icon: Leaf },
+    { title: "Fresh Delivery", icon: Truck },
+    { title: "Happy Customers", icon: Heart }
   ];
 
   return (
     <section ref={ref} className="py-12 md:py-24 bg-white dark:bg-black relative z-20">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Seamless Export Process</h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Freshness From Factory to You</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-8 relative">
           {/* Background Line */}
           <div className="hidden lg:block absolute top-12 left-0 right-0 h-1 bg-gray-100 dark:bg-white/10 -z-10">
@@ -287,17 +287,17 @@ function HomeContent() {
           <section className="py-12 md:py-24 bg-gray-50 dark:bg-white/5 relative z-20">
             <div className="max-w-7xl mx-auto px-4">
               <div className="text-center mb-10 md:mb-16">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">Why Global Buyers Choose CANZZY</h2>
-                <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400">Trusted by importers across 5 continents.</p>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">Why Sweet Lovers Choose CANZZY</h2>
+                <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400">Spreading smiles with every tangy bite.</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                 {[
-                  { icon: Globe, title: "Global Export Experience", desc: "Successfully exporting to USA, UK, UAE & Africa." },
-                  { icon: ShieldCheck, title: "Strict Quality Control", desc: "FSSAI, ISO & HACCP compliant manufacturing." },
-                  { icon: Package, title: "Custom Packaging", desc: "Private labeling & localized packaging options." },
-                  { icon: TrendingUp, title: "Competitive Pricing", desc: "Direct manufacturer pricing for bulk orders." },
-                  { icon: Factory, title: "Indian Manufacturer", desc: "Authentic taste from a verified Indian factory." },
-                  { icon: Truck, title: "Reliable Supply Chain", desc: "On-time delivery and logistics support." }
+                  { icon: Globe, title: "Global Flavor Love", desc: "Enjoyed in USA, UK, UAE & Africa." },
+                  { icon: ShieldCheck, title: "Pure Ingredients", desc: "FSSAI, ISO & HACCP certified safety." },
+                  { icon: Candy, title: "Custom Packaging", desc: "Eye-catching packs for every shelf." },
+                  { icon: Star, title: "Unbeatable Taste", desc: "Perfect balance of sweet and tangy." },
+                  { icon: Factory, title: "Direct From Factory", desc: "Authentic taste from our Indian kitchen." },
+                  { icon: Truck, title: "Fresh Delivery", desc: "Quick dispatch to keep flavors intact." }
                 ].map((item, i) => (
                   <div key={i} className="flex flex-col items-center text-center p-6 bg-white dark:bg-black/50 md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white dark:bg-black rounded-full shadow-sm flex items-center justify-center text-lime-600 dark:text-lime-500 mb-4 sm:mb-6">
@@ -314,18 +314,18 @@ function HomeContent() {
           {/* SECTION 5: PRODUCT CATEGORIES */}
           <section className="py-12 md:py-24 bg-white dark:bg-black relative z-20">
             <div className="max-w-7xl mx-auto px-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Our Product Range</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Our Sweet Range</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {[
-                  { name: "Candies & Confectionery", color: "bg-pink-100 dark:bg-pink-900/20", text: "text-pink-700 dark:text-pink-400", link: "/exports/candies" },
-                  { name: "Mouth Fresheners", color: "bg-emerald-100 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", link: "/exports/mouth-fresheners" },
-                  { name: "Snacks & Namkeen", color: "bg-orange-100 dark:bg-orange-900/20", text: "text-orange-700 dark:text-orange-400", link: "/exports/snacks" },
-                  { name: "Ready-to-Eat", color: "bg-yellow-100 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-400", link: "/contact" }
+                  { name: "Tangy Candies", color: "bg-pink-100 dark:bg-pink-900/20", text: "text-pink-700 dark:text-pink-400", link: "/exports/candies", icon: Candy },
+                  { name: "Mouth Fresheners", color: "bg-emerald-100 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", link: "/exports/mouth-fresheners", icon: Leaf },
+                  { name: "Fun Snacks", color: "bg-orange-100 dark:bg-orange-900/20", text: "text-orange-700 dark:text-orange-400", link: "/exports/snacks", icon: IceCream },
+                  { name: "Gift Packs", color: "bg-yellow-100 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-400", link: "/contact", icon: Box }
                 ].map((cat, i) => (
                   <a href={cat.link} key={i} className={`p-3 sm:p-4 rounded-2xl ${cat.color} hover:scale-105 transition-transform cursor-pointer group flex flex-col items-center text-center`}>
                     <div className="h-16 sm:h-20 flex items-center justify-center mb-2 sm:mb-3">
                       {/* Placeholder for Product Image */}
-                      <Package size={32} className={`${cat.text} opacity-50 group-hover:opacity-100 transition-opacity sm:w-10 sm:h-10`} />
+                      <cat.icon size={32} className={`${cat.text} opacity-50 group-hover:opacity-100 transition-opacity sm:w-10 sm:h-10`} />
                     </div>
                     <h3 className={`text-base sm:text-lg font-bold ${cat.text} mb-1 leading-tight`}>{cat.name}</h3>
                     <span className={`inline-flex items-center gap-1 text-xs font-bold ${cat.text} opacity-80 mt-auto`}>View <ArrowRight size={14} /></span>
@@ -360,13 +360,14 @@ function HomeContent() {
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none" />
             <div className="max-w-7xl mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
               <div>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">Bulk Supply & Private Label Manufacturing</h2>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">Create Your Own Candy Brand</h2>
+                <p className="text-xl mb-6 opacity-90">We make it, you brand it. The tastiest partnership you'll ever have.</p>
                 <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
                   {[
-                    "Custom branding & packaging design",
-                    "OEM manufacturing support",
-                    "Flexible MOQs for export markets",
-                    "End-to-end documentation assistance"
+                    "Custom flavor development",
+                    "Fun & colorful packaging",
+                    "Bulk supply for events/stores",
+                    "Export-ready certified products"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-4 text-lg sm:text-xl font-medium">
                       <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
@@ -405,8 +406,8 @@ function HomeContent() {
           {/* SECTION 9: FINAL CTA */}
           <section className="py-12 md:py-24 bg-gray-900 text-white text-center px-4 relative z-20">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">Looking for a Reliable FMCG Partner?</h2>
-              <p className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-10">Fast response • Export-ready • Trusted supplier</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">Ready to Sweeten the Deal?</h2>
+              <p className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-10">Partner with India's most innovative candy maker.</p>
               <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
                 <a href="/contact" className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 bg-lime-500 text-black font-bold text-lg rounded-full transition-colors flex items-center justify-center gap-3 relative overflow-hidden group">
                   <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
