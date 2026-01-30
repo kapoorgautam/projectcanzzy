@@ -62,22 +62,25 @@ function ShopCard({ product, index }: { product: Product; index: number }) {
                 {/* Add Button */}
                 <button
                     onClick={handleAddToCart}
-                    className={`flex-1 flex items-center justify-center gap-2 rounded-xl font-bold transition-all duration-300 ${isAdded
-                            ? 'bg-green-500 text-white'
-                            : 'bg-black dark:bg-white text-white dark:text-black hover:bg-lime-500 hover:text-black dark:hover:bg-lime-400'
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-xl font-bold transition-all duration-300 relative overflow-hidden group ${isAdded
+                        ? 'bg-green-500 text-white'
+                        : 'bg-black dark:bg-white text-white dark:text-black'
                         }`}
                 >
-                    {isAdded ? (
-                        <>
-                            <Check size={18} />
-                            <span>Added</span>
-                        </>
-                    ) : (
-                        <>
-                            <ShoppingCart size={18} />
-                            <span>Add</span>
-                        </>
-                    )}
+                    {!isAdded && <span className="absolute inset-0 bg-lime-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />}
+                    <span className="relative flex items-center gap-2">
+                        {isAdded ? (
+                            <>
+                                <Check size={18} />
+                                <span>Added</span>
+                            </>
+                        ) : (
+                            <>
+                                <ShoppingCart size={18} className="group-hover:text-black transition-colors" />
+                                <span className="group-hover:text-black transition-colors">Add</span>
+                            </>
+                        )}
+                    </span>
                 </button>
             </div>
         </motion.div>

@@ -51,7 +51,7 @@ export default function Footer() {
                                 <a
                                     key={i}
                                     href="#"
-                                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center hover:bg-lime-500 hover:text-black transition-all duration-300"
+                                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center hover:bg-lime-500 hover:text-black transition-all duration-300 transform hover:-translate-y-1"
                                 >
                                     <Icon size={18} className="md:w-5 md:h-5" />
                                 </a>
@@ -67,8 +67,9 @@ export default function Footer() {
                                 { name: 'Bulk Orders', href: '/contact' },
                             ].map((item) => (
                                 <li key={item.name}>
-                                    <a href={item.href} className="text-gray-600 dark:text-gray-400 hover:text-lime-600 dark:hover:text-lime-400 transition-colors">
-                                        {item.name}
+                                    <a href={item.href} className="text-gray-600 dark:text-gray-400 hover:text-lime-600 dark:hover:text-lime-400 transition-colors inline-block py-1 relative group">
+                                        <span className="relative z-10">{item.name}</span>
+                                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-lime-500 group-hover:w-full transition-all duration-300" />
                                     </a>
                                 </li>
                             ))}
@@ -91,16 +92,19 @@ export default function Footer() {
                             />
                             <button
                                 disabled={status === 'submitting' || status === 'success'}
-                                className={`font-bold py-2 md:py-3 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm md:text-base ${status === 'success'
+                                className={`font-bold py-2 md:py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm md:text-base w-full relative overflow-hidden group ${status === 'success'
                                     ? 'bg-green-500 text-white'
-                                    : 'bg-lime-500 text-black hover:bg-lime-400'
+                                    : 'bg-lime-500 text-black'
                                     }`}
                             >
-                                {status === 'submitting' ? 'Subscribing...' : status === 'success' ? (
-                                    <>
-                                        <Check size={18} /> Subscribed
-                                    </>
-                                ) : 'Subscribe'}
+                                {status !== 'success' && <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />}
+                                <span className="relative flex items-center gap-2">
+                                    {status === 'submitting' ? 'Subscribing...' : status === 'success' ? (
+                                        <>
+                                            <Check size={18} /> Subscribed
+                                        </>
+                                    ) : 'Subscribe'}
+                                </span>
                             </button>
                             {status === 'error' && (
                                 <p className="text-red-500 text-xs font-bold mt-1">{errorMessage}</p>

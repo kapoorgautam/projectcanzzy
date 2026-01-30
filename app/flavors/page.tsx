@@ -38,9 +38,10 @@ function ProductCard({ product, index, onClick }: { product: Product; index: num
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-white/5">
                     <span className="text-sm font-bold text-gray-400 uppercase tracking-widest group-hover:text-lime-500 transition-colors">Tap for Details</span>
                     <div
-                        className="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg"
+                        className="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-transform shadow-lg relative overflow-hidden group/btn"
                     >
-                        <ArrowRight size={20} className="-rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                        <span className="absolute inset-0 bg-lime-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        <ArrowRight size={20} className="-rotate-45 group-hover:rotate-0 transition-transform duration-300 relative z-10 mix-blend-difference" />
                     </div>
                 </div>
             </div>

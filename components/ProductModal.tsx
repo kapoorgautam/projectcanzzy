@@ -186,10 +186,13 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                             <button
                                                 type="submit"
                                                 disabled={formStatus === 'submitting'}
-                                                className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-lime-500/20 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                                                className="w-full bg-lime-500 text-black font-bold py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group"
                                             >
-                                                {formStatus === 'submitting' ? 'Sending...' : 'Send Inquiry'}
-                                                {!formStatus && <Send size={18} />}
+                                                <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                                <span className="relative flex items-center gap-2">
+                                                    {formStatus === 'submitting' ? 'Sending...' : 'Send Inquiry'}
+                                                    {!formStatus && <Send size={18} />}
+                                                </span>
                                             </button>
                                             {formStatus === 'error' && (
                                                 <p className="text-red-500 text-xs text-center mt-2 font-bold">{errorMessage}</p>

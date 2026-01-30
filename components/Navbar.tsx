@@ -1,129 +1,190 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 
 export default function Navbar({ hidden = false }: { hidden?: boolean }) {
-    const [scrolled, setScrolled] = useState(false);
+    const { scrollY } = useScroll();
+    const pathname = usePathname();
+    const [isCompact, setIsCompact] = useState(false);
+    const [isAtTop, setIsAtTop] = useState(true);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (typeof window !== 'undefined') {
-                setScrolled(window.scrollY > 50);
+        return scrollY.on('change', (latest) => {
+            const previous = scrollY.getPrevious() || 0;
+            const direction = latest > previous ? 'down' : 'up';
+
+            setIsAtTop(latest <= 50);
+
+            if (latest > 50 && direction === 'down') {
+                setIsCompact(true);
+            } else if (direction === 'up') {
+                setIsCompact(false);
             }
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+        });
+    }, [scrollY]);
+
+    const handleLogoClick = (e: React.MouseEvent) => {
+        if (pathname === '/') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
     return (
-        <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: hidden ? -100 : 0 }}
-            transition={{ duration: 0.5 }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none' : 'bg-transparent'
-                }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="relative flex items-center justify-between h-20">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 group z-10">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-lime-400 to-yellow-400 flex items-center justify-center animate-spin-slow group-hover:scale-110 transition-transform">
-                            <span className="text-black font-bold text-xs">C</span>
-                        </div>
-                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-yellow-400 tracking-tight">
-                            CANZZY
-                        </span>
-                    </Link>
+        <>
+            <motion.nav
+                layout
+                className={`fixed z-50 flex items-center transition-all duration-500 ease-[0.25,0.1,0.25,1.0] ${isCompact
+                    ? 'top-6 left-4 md:left-8 right-auto pointer-events-none'
+                    : 'top-6 left-0 right-0 justify-center w-full pointer-events-none'
+                    }`}
+                initial={false}
+                transition={{
+                    type: "tween",
+                    duration: 0.5,
+                    ease: [0.25, 0.1, 0.25, 1.0]
+                }}
+            >
+                <motion.div
+                    layout
+                    className={`relative flex items-center pointer-events-auto overflow-hidden ${isCompact
+                        ? 'bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-2xl rounded-full px-2 py-2 gap-0'
+                        : `w-[95%] md:w-full max-w-7xl rounded-full px-6 h-16 gap-8 justify-between ${isAtTop ? 'bg-transparent' : 'bg-white/80 dark:bg-black/80 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-lg'
+                        }`
+                        }`}
+                    transition={{
+                        type: "tween",
+                        duration: 0.5,
+                        ease: [0.25, 0.1, 0.25, 1.0]
+                    }}
+                >
+                    {/* Logo - Always Visible */}
+                    <motion.div layout="position" className="z-10 flex-shrink-0">
+                        <Link
+                            href="/"
+                            className="flex items-center gap-2 group"
+                            onClick={handleLogoClick}
+                        >
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400 to-yellow-400 flex items-center justify-center animate-spin-slow group-hover:rotate-180 transition-transform duration-700">
+                                <span className="text-black font-bold text-xs">C</span>
+                            </div>
+                            <AnimatePresence mode="popLayout">
+                                {!isCompact && (
+                                    <motion.span
+                                        initial={{ opacity: 0, width: 0 }}
+                                        animate={{ opacity: 1, width: "auto" }}
+                                        exit={{ opacity: 0, width: 0 }}
+                                        className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-yellow-400 tracking-tight whitespace-nowrap overflow-hidden ml-2"
+                                    >
+                                        CANZZY
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </Link>
+                    </motion.div>
 
-                    {/* Desktop Links - Centered */}
-                    <div className="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center gap-8">
-                        {[
-                            'Our Story', 'Flavors', 'Contact'].map((item) => (
+                    {/* Desktop Links - Hidden when compact */}
+                    <AnimatePresence>
+                        {!isCompact && (
+                            <motion.div
+                                initial={{ opacity: 0, width: 0 }}
+                                animate={{ opacity: 1, width: "auto" }}
+                                exit={{ opacity: 0, width: 0 }}
+                                className="hidden md:flex items-center gap-2 overflow-hidden whitespace-nowrap"
+                            >
+                                {['Our Story', 'Flavors', 'Contact'].map((item) => (
+                                    <Link
+                                        key={item}
+                                        href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story' : `/${item.toLowerCase().replace(' ', '-')}`}
+                                        className="relative px-4 py-2 rounded-full text-gray-700 dark:text-white/80 text-sm font-medium tracking-wide uppercase transition-all hover:text-black dark:hover:text-white overflow-hidden group"
+                                    >
+                                        <span className="relative z-10">{item}</span>
+                                        <span className="absolute inset-0 bg-lime-400/20 dark:bg-lime-400/10 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-full origin-center" />
+                                    </Link>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Actions - Hidden when compact */}
+                    <AnimatePresence>
+                        {!isCompact && (
+                            <motion.div
+                                initial={{ opacity: 0, width: 0 }}
+                                animate={{ opacity: 1, width: "auto" }}
+                                exit={{ opacity: 0, width: 0 }}
+                                className="flex items-center gap-4 overflow-hidden"
+                            >
+                                <div className="hidden md:block">
+                                    <ThemeToggle />
+                                </div>
                                 <a
+                                    href="https://wa.me/919354502422"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hidden md:flex items-center gap-2 bg-lime-500 text-black px-6 py-2 rounded-full font-bold transition-all hover:brightness-110 relative overflow-hidden group"
+                                >
+                                    <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                    <span className="relative flex items-center gap-2">
+                                        <span>WhatsApp</span>
+                                        <MessageCircle size={18} />
+                                    </span>
+                                </a>
+                                <div className="md:hidden ml-auto">
+                                    <button
+                                        className="text-gray-900 dark:text-white"
+                                        onClick={() => setMobileMenuOpen(true)}
+                                    >
+                                        <Menu />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+            </motion.nav>
+
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl flex flex-col p-6"
+                    >
+                        <button
+                            className="self-end text-white p-2 mb-8"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <X size={32} />
+                        </button>
+
+                        <div className="flex flex-col gap-8 items-center justify-center flex-grow">
+                            {['Our Story', 'Flavors', 'Contact'].map((item) => (
+                                <Link
                                     key={item}
-                                    href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story'
-                                        : item === 'Contact' ? '/contact'
-                                            : `/#${item.toLowerCase()}`}
-                                    className="text-gray-700 dark:text-white/80 hover:text-lime-600 dark:hover:text-lime-400 transition-colors text-sm font-medium tracking-wide uppercase"
+                                    href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story' : `/${item.toLowerCase().replace(' ', '-')}`}
+                                    className="text-3xl text-white font-bold tracking-tight hover:text-lime-400 transition-colors"
+                                    onClick={() => setMobileMenuOpen(false)}
                                 >
                                     {item}
-                                </a>
+                                </Link>
                             ))}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-4">
-                        <div className="hidden md:block">
-                            <ThemeToggle />
+                            <div className="mt-8 flex items-center gap-4 text-white">
+                                <span className="opacity-60">Theme</span>
+                                <ThemeToggle />
+                            </div>
                         </div>
-                        <a
-                            href="https://wa.me/919354502422"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hidden md:flex items-center gap-2 bg-lime-500 hover:bg-lime-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(132,204,22,0.3)] hover:shadow-[0_0_30px_rgba(132,204,22,0.5)] transform hover:-translate-y-0.5"
-                        >
-                            <span>WhatsApp</span>
-                            <MessageCircle size={18} />
-                        </a>
-                        <button
-                            className="md:hidden text-gray-900 dark:text-white"
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        >
-                            {mobileMenuOpen ? <X /> : <Menu />}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: '100vh' }}
-                    className="md:hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[60]"
-                >
-                    <button
-                        className="absolute top-6 right-4 text-white p-2"
-                        onClick={() => setMobileMenuOpen(false)}
-                        aria-label="Close menu"
-                    >
-                        <X size={32} />
-                    </button>
-
-                    <div className="px-6 pb-8 pt-32 flex flex-col gap-8 items-center justify-start h-full overflow-y-auto">
-                        {['Our Story', 'Flavors', 'Contact'].map((item) => (
-                            <a
-                                key={item}
-                                href={item === 'Flavors' ? '/flavors' : item === 'Our Story' ? '/our-story' : `/${item.toLowerCase()}`}
-                                className="text-3xl text-white font-bold tracking-tight hover:text-lime-400 transition-colors py-2"
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                {item}
-                            </a>
-                        ))}
-
-                        <div className="flex items-center gap-4 mt-4">
-                            <span className="text-white/60 text-sm font-medium">Theme</span>
-                            <ThemeToggle />
-                        </div>
-
-                        <a
-                            href="https://wa.me/919354502422"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full max-w-xs bg-lime-500 text-black py-4 rounded-full font-bold mt-8 flex items-center justify-center gap-2 text-lg shadow-[0_0_20px_rgba(132,204,22,0.4)]"
-                        >
-                            <span>WhatsApp Us</span>
-                            <MessageCircle size={24} />
-                        </a>
-                    </div>
-                </motion.div>
-            )}
-        </motion.nav>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }

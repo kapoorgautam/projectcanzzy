@@ -191,21 +191,21 @@ export default function ContactPage() {
                                         <button
                                             type="button"
                                             onClick={() => setInquiryType('general')}
-                                            className={`py-2 rounded-lg text-sm font-bold transition-all ${inquiryType === 'general' ? 'bg-white dark:bg-gray-800 shadow text-black dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                            className={`py-2 px-4 rounded-lg text-sm font-bold transition-all w-full relative overflow-hidden group ${inquiryType === 'general' ? 'bg-white dark:bg-gray-800 shadow text-black dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/5'}`}
                                         >
                                             General
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setInquiryType('bulk')}
-                                            className={`py-2 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${inquiryType === 'bulk' ? 'bg-white dark:bg-gray-800 shadow text-black dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                            className={`py-2 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 w-full relative overflow-hidden group ${inquiryType === 'bulk' ? 'bg-white dark:bg-gray-800 shadow text-black dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/5'}`}
                                         >
                                             <Package size={14} /> Bulk
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setInquiryType('custom')}
-                                            className={`py-2 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${inquiryType === 'custom' ? 'bg-white dark:bg-gray-800 shadow text-black dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                            className={`py-2 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 w-full relative overflow-hidden group ${inquiryType === 'custom' ? 'bg-white dark:bg-gray-800 shadow text-black dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/5'}`}
                                         >
                                             <FlaskConical size={14} /> Custom
                                         </button>
@@ -295,15 +295,18 @@ export default function ContactPage() {
                                     <button
                                         type="submit"
                                         disabled={formStatus === 'submitting'}
-                                        className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 rounded-xl text-lg transition-all shadow-lg hover:shadow-lime-500/20 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                                        className="w-full bg-lime-500 text-black font-bold py-4 rounded-xl text-lg transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group"
                                     >
-                                        {formStatus === 'submitting' ? (
-                                            'Sending...'
-                                        ) : (
-                                            <>
-                                                <Send size={20} /> Send Message
-                                            </>
-                                        )}
+                                        <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                        <span className="relative flex items-center gap-2">
+                                            {formStatus === 'submitting' ? (
+                                                'Sending...'
+                                            ) : (
+                                                <>
+                                                    <Send size={20} /> Send Message
+                                                </>
+                                            )}
+                                        </span>
                                     </button>
 
                                     {formStatus === 'error' && (

@@ -145,12 +145,15 @@ function HomeContent() {
                     backgroundColor: isActive ? p.themeColor : 'transparent',
                     color: isActive ? (['chandan-mukhavas', 'kaccha-mango', 'orange-blast', 'mix-fruit'].includes(p.id) ? 'white' : 'black') : '',
                   }}
-                  className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${isActive
+                  className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 relative overflow-hidden group ${isActive
                     ? 'shadow-lg scale-100'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
                     }`}
                 >
-                  {p.name.split(' ')[0]}
+                  {!isActive && (
+                    <span className="absolute inset-0 bg-gray-100 dark:bg-white/10 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-full" />
+                  )}
+                  <span className="relative z-10">{p.name.split(' ')[0]}</span>
                 </button>
               );
             })}
@@ -205,10 +208,13 @@ function HomeContent() {
           >
             <Link
               href="/flavors"
-              className="group w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-base sm:text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3 mx-auto inline-flex"
+              className="group w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-base sm:text-lg transition-all shadow-2xl flex items-center justify-center gap-3 mx-auto inline-flex relative overflow-hidden"
             >
-              Explore Flavors
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              <span className="absolute inset-0 bg-white/20 dark:bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              <span className="relative z-10 flex items-center gap-3">
+                Explore Flavors
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </span>
             </Link>
           </motion.div>
         </div>
@@ -252,8 +258,8 @@ function HomeContent() {
                   <li className="flex items-center gap-3 text-base sm:text-lg text-gray-600 dark:text-gray-300"><div className="w-2 h-2 bg-blue-500 rounded-full shrink-0" /> OEM Manufacturing</li>
                   <li className="flex items-center gap-3 text-base sm:text-lg text-gray-600 dark:text-gray-300"><div className="w-2 h-2 bg-blue-500 rounded-full shrink-0" /> Export-Ready Packaging</li>
                 </ul>
-                <a href="/contact" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline text-lg py-2">
-                  Request Bulk Quote <ArrowRight size={20} />
+                <a href="/contact" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline text-lg py-2 group">
+                  <span className="group-hover:text-blue-500 transition-colors">Request Bulk Quote</span> <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
 
@@ -270,8 +276,8 @@ function HomeContent() {
                   <li className="flex items-center gap-3 text-base sm:text-lg text-gray-600 dark:text-gray-300"><div className="w-2 h-2 bg-lime-500 rounded-full shrink-0" /> Fresh & Safe Products</li>
                 </ul>
                 {/* Since we removed individual product switching here, this could link to a catalog page or anchor to the canvas */}
-                <Link href="/flavors" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-lime-600 dark:text-lime-400 font-bold hover:underline text-lg py-2">
-                  Explore Products <ArrowRight size={20} />
+                <Link href="/flavors" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-lime-600 dark:text-lime-400 font-bold hover:underline text-lg py-2 group">
+                  <span className="group-hover:text-lime-500 transition-colors">Explore Products</span> <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -370,8 +376,9 @@ function HomeContent() {
                     </li>
                   ))}
                 </ul>
-                <a href="/contact" className="w-full sm:w-auto inline-block text-center px-10 py-5 bg-white text-lime-900 font-bold text-lg sm:text-xl rounded-full hover:bg-lime-50 transition-colors shadow-xl">
-                  Start Private Label Inquiry
+                <a href="/contact" className="w-full sm:w-auto inline-block text-center px-10 py-5 bg-white text-lime-900 font-bold text-lg sm:text-xl rounded-full transition-all shadow-xl relative overflow-hidden group">
+                  <span className="absolute inset-0 bg-lime-50 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative z-10">Start Private Label Inquiry</span>
                 </a>
               </div>
               <div className="hidden lg:block">
@@ -401,11 +408,17 @@ function HomeContent() {
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">Looking for a Reliable FMCG Partner?</h2>
               <p className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-10">Fast response • Export-ready • Trusted supplier</p>
               <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-                <a href="/contact" className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 bg-lime-500 text-black font-bold text-lg rounded-full hover:bg-lime-400 transition-colors flex items-center justify-center gap-3">
-                  <FileText size={20} /> Request Quote
+                <a href="/contact" className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 bg-lime-500 text-black font-bold text-lg rounded-full transition-colors flex items-center justify-center gap-3 relative overflow-hidden group">
+                  <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative flex items-center gap-3">
+                    <FileText size={20} /> Request Quote
+                  </span>
                 </a>
-                <a href="https://wa.me/919354502422" target="_blank" className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 bg-white/10 border border-white/20 text-white font-bold text-lg rounded-full hover:bg-white/20 transition-colors flex items-center justify-center gap-3">
-                  <MessageCircle size={20} /> WhatsApp Us
+                <a href="https://wa.me/919354502422" target="_blank" className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 bg-white/10 border border-white/20 text-white font-bold text-lg rounded-full transition-colors flex items-center justify-center gap-3 relative overflow-hidden group">
+                  <span className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative flex items-center gap-3">
+                    <MessageCircle size={20} /> WhatsApp Us
+                  </span>
                 </a>
               </div>
             </div>
