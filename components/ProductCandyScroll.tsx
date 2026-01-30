@@ -1,9 +1,10 @@
 'use client';
 
-import { useScroll, useTransform, MotionValue } from 'framer-motion';
+import { useScroll } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Product } from '@/data/products';
 import BackgroundParticles from './BackgroundParticles';
+import NextImage from 'next/image';
 
 
 interface ProductCandyScrollProps {
@@ -12,11 +13,8 @@ interface ProductCandyScrollProps {
 
 export default function ProductCandyScroll({ product }: ProductCandyScrollProps) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [images, setImages] = useState<HTMLImageElement[]>([]);
-    const [loaded, setLoaded] = useState(false);
     const frameCount = product.frameCount;
-
+    const [currentFrame, setCurrentFrame] = useState(product.startFrame || 1);
 
 
     const { scrollYProgress } = useScroll({
@@ -24,126 +22,53 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
         offset: ['start 80px', 'end end'],
     });
 
-    const startFrameIndex = (product.startFrame || 1) - 1;
-    const endFrameIndex = frameCount - 1;
-    const frameIndex = useTransform(scrollYProgress, [0, 1], [startFrameIndex, endFrameIndex]);
-
-    // Load images only if NOT mobile
-    useEffect(() => {
-        const loadImages = async () => {
-            const imgs: HTMLImageElement[] = [];
-            const promises = [];
-
-            for (let i = 1; i <= frameCount; i++) {
-                const promise = new Promise<void>((resolve) => {
-                    const img = new Image();
-                    const src = `${product.folderPath}/${i}.jpg`;
-                    img.src = src;
-                    img.onload = () => resolve();
-                    img.onerror = () => resolve();
-                    imgs[i - 1] = img;
-                });
-                promises.push(promise);
-            }
-
-            await Promise.all(promises);
-            setImages(imgs);
-            setLoaded(true);
-        };
-
-        loadImages();
-    }, [product.folderPath, frameCount]);
+    const startFrameIndex = (product.startFrame || 1);
+    const endFrameIndex = frameCount;
 
     useEffect(() => {
-        // Run canvas logic only if loaded
-        if (!loaded || !canvasRef.current || images.length === 0) return;
+        const unsubscribe = scrollYProgress.on("change", (latest) => {
+            // Calculate frame index based on scroll progress
+            const frame = Math.floor(startFrameIndex + latest * (endFrameIndex - startFrameIndex));
 
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d', { alpha: true }); // Optimize for alpha if needed
-        if (!ctx) return;
+            // Clamp value to safe bounds
+            const safeFrame = Math.max(startFrameIndex, Math.min(endFrameIndex, frame));
 
-        // Enable high-quality scaling
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-
-        const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1; // Cap DPR at 2 for performance
-        let rafId: number;
-        let lastFrameIndex = -1;
-
-        const resizeCanvas = () => {
-            const parent = canvas.parentElement;
-            if (!parent) return;
-            const width = parent.clientWidth;
-            const height = parent.clientHeight;
-
-            // Only update if dimensions actually changed to avoid flicker
-            if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
-                canvas.style.width = `${width}px`;
-                canvas.style.height = `${height}px`;
-                canvas.width = Math.floor(width * dpr);
-                canvas.height = Math.floor(height * dpr);
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                lastFrameIndex = -1; // Force redraw
-            }
-        };
-
-        const drawFrame = () => {
-            // Get current scroll-based frame
-            const rawIndex = frameIndex.get();
-            const index = Math.min(
-                frameCount - 1,
-                Math.max(0, Math.floor(rawIndex))
-            );
-
-            // Optimization: Only redraw if frame changed
-            if (index === lastFrameIndex) return;
-            lastFrameIndex = index;
-
-            const img = images[index];
-            if (!img) return;
-
-            const cw = canvas.width / dpr;
-            const ch = canvas.height / dpr;
-
-            // Clear only if transparent images (not strictly necessary if filling screen, but safer)
-            ctx.clearRect(0, 0, cw, ch);
-
-            // 'cover' fit logic
-            const scale = Math.max(cw / img.width, ch / img.height);
-            const drawWidth = img.width * scale;
-            const drawHeight = img.height * scale;
-            const offsetX = (cw - drawWidth) / 2;
-            const offsetY = (ch - drawHeight) / 2;
-
-            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-        };
-
-        const render = () => {
-            drawFrame();
-            rafId = requestAnimationFrame(render);
-        };
-
-        // Initial setup
-        resizeCanvas();
-        render();
-
-        const resizeObserver = new ResizeObserver(() => {
-            resizeCanvas();
-            drawFrame(); // Draw immediately on resize
+            setCurrentFrame(safeFrame);
         });
 
-        if (containerRef.current) {
-            resizeObserver.observe(containerRef.current);
-        }
+        return () => unsubscribe();
+    }, [scrollYProgress, startFrameIndex, endFrameIndex]);
 
-        window.addEventListener('resize', resizeCanvas);
+
+    // Background prefetch for smoother animation
+    useEffect(() => {
+        let isMounted = true;
+        const preloadImages = async () => {
+            // Priority: Load every 5th frame first for fast scrolling context
+            for (let i = 1; i <= frameCount; i += 5) {
+                if (!isMounted) return;
+                const img = new window.Image();
+                img.src = `${product.folderPath}/${i}.jpg`;
+            }
+            // Then fill in the gaps
+            for (let i = 1; i <= frameCount; i++) {
+                if (i % 5 === 0) continue; // Skip already loaded
+                if (!isMounted) return;
+                const img = new window.Image();
+                img.src = `${product.folderPath}/${i}.jpg`;
+            }
+        };
+
+        // Start preloading after a short delay to allow critical rendering
+        const timer = setTimeout(() => {
+            preloadImages();
+        }, 100);
 
         return () => {
-            cancelAnimationFrame(rafId);
-            resizeObserver.disconnect();
-            window.removeEventListener('resize', resizeCanvas);
+            isMounted = false;
+            clearTimeout(timer);
         };
-    }, [loaded, images, frameIndex, frameCount]);
+    }, [product.folderPath, frameCount]);
 
     return (
         <div ref={containerRef} className="h-[500vh] relative">
@@ -152,15 +77,20 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
                 <div className="absolute inset-0 bg-black/20" />
 
                 <BackgroundParticles themeColor={product.themeColor} />
-                <canvas
-                    ref={canvasRef}
-                    className="w-full h-full object-cover max-w-[100vw] max-h-[100vh] relative z-10"
-                />
-                {!loaded && (
-                    <div className="absolute inset-0 flex items-center justify-center text-white z-20">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lime-500"></div>
-                    </div>
-                )}
+
+                <div className="relative w-full h-full max-w-[100vw] max-h-[100vh] z-10 flex items-center justify-center">
+                    <NextImage
+                        src={`${product.folderPath}/${currentFrame}.jpg`}
+                        alt={`${product.name} frame ${currentFrame}`}
+                        fill
+                        priority
+                        unoptimized // Bypass server optimization for static assets to reduce latency
+                        loading="eager"
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 100vw"
+                        quality={85}
+                    />
+                </div>
             </div>
         </div>
     );
