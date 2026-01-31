@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { ArrowRight, Leaf, Truck, RotateCcw, Box, Users, Factory, Globe, ShieldCheck, FileText, Phone, MessageCircle, Package, Award, TrendingUp, Ship, Candy, IceCream, Smile, Heart, Star } from 'lucide-react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
 import Navbar from '@/components/Navbar';
@@ -24,7 +25,7 @@ const SeamlessExportSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 65%", "end 45%"]
+    offset: ["start 80%", "center center"]
   });
 
   const width = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
@@ -317,19 +318,66 @@ function HomeContent() {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Our Sweet Range</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {[
-                  { name: "Tangy Candies", color: "bg-pink-100 dark:bg-pink-900/20", text: "text-pink-700 dark:text-pink-400", link: "/exports/candies", icon: Candy },
-                  { name: "Mouth Fresheners", color: "bg-emerald-100 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", link: "/exports/mouth-fresheners", icon: Leaf },
-                  { name: "Fun Snacks", color: "bg-orange-100 dark:bg-orange-900/20", text: "text-orange-700 dark:text-orange-400", link: "/exports/snacks", icon: IceCream },
-                  { name: "Gift Packs", color: "bg-yellow-100 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-400", link: "/contact", icon: Box }
+                  { name: "Tangy Candies", color: "bg-pink-100 dark:bg-pink-900/20", text: "text-pink-700 dark:text-pink-400", link: "/flavors", icon: Candy, image: "/productimage/mixfruit.png", status: "active" },
+                  { name: "Mouth Fresheners", color: "bg-emerald-100 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", link: "/flavors", icon: Leaf, image: "/productimage/chandan.png", status: "active" },
+                  { name: "Fun Snacks", color: "bg-orange-100 dark:bg-orange-900/20", text: "text-orange-700 dark:text-orange-400", link: "/exports/snacks", icon: IceCream, status: "coming_soon" },
+                  { name: "Gift Packs", color: "bg-yellow-100 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-400", link: "/contact", icon: Box, status: "coming_soon" }
                 ].map((cat, i) => (
-                  <a href={cat.link} key={i} className={`p-3 sm:p-4 rounded-2xl ${cat.color} hover:scale-105 transition-transform cursor-pointer group flex flex-col items-center text-center`}>
-                    <div className="h-16 sm:h-20 flex items-center justify-center mb-2 sm:mb-3">
-                      {/* Placeholder for Product Image */}
-                      <cat.icon size={32} className={`${cat.text} opacity-50 group-hover:opacity-100 transition-opacity sm:w-10 sm:h-10`} />
+                  <Link
+                    href={cat.status === 'active' ? cat.link : '#'}
+                    key={i}
+                    className={`relative p-3 sm:p-4 rounded-2xl ${cat.color} ${cat.status === 'active' ? 'hover:scale-105 cursor-pointer' : 'cursor-default'} transition-all duration-300 group flex flex-col items-center text-center overflow-hidden h-full`}
+                    onClick={(e) => cat.status !== 'active' && e.preventDefault()}
+                  >
+                    {/* Coming Soon Badge */}
+                    {cat.status === 'coming_soon' && (
+                      <div className="absolute top-3 right-3 z-20">
+                        <span className="bg-black/90 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg animate-pulse">
+                          SOON
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="h-32 w-full flex items-center justify-center mb-4 relative">
+                      {cat.status === 'active' && cat.image ? (
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={cat.image}
+                            alt={cat.name}
+                            fill
+                            className="object-contain drop-shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
+                          />
+                        </div>
+                      ) : (
+                        <motion.div
+                          animate={{
+                            y: [0, -5, 0],
+                            scale: [1, 1.05, 1],
+                            rotate: [0, 5, -5, 0]
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <cat.icon size={48} className={`${cat.text} opacity-50`} />
+                        </motion.div>
+                      )}
                     </div>
-                    <h3 className={`text-base sm:text-lg font-bold ${cat.text} mb-1 leading-tight`}>{cat.name}</h3>
-                    <span className={`inline-flex items-center gap-1 text-xs font-bold ${cat.text} opacity-80 mt-auto`}>View <ArrowRight size={14} /></span>
-                  </a>
+
+                    <h3 className={`text-lg sm:text-xl font-bold ${cat.text} mb-2 leading-tight`}>{cat.name}</h3>
+
+                    {cat.status === 'active' ? (
+                      <span className={`inline-flex items-center gap-1 text-xs font-bold ${cat.text} opacity-80 mt-auto group-hover:gap-2 transition-all`}>
+                        View Products <ArrowRight size={14} />
+                      </span>
+                    ) : (
+                      <span className={`text-xs font-bold ${cat.text} opacity-60 mt-auto`}>
+                        Launching Soon
+                      </span>
+                    )}
+                  </Link>
                 ))}
               </div>
             </div>

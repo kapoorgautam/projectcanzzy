@@ -71,19 +71,46 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
                             className="flex items-center gap-2 group"
                             onClick={handleLogoClick}
                         >
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400 to-yellow-400 flex items-center justify-center animate-spin-slow group-hover:rotate-180 transition-transform duration-700">
-                                <span className="text-black font-bold text-xs">C</span>
+                            <div className="w-12 h-12 relative animate-bounce-slow">
+                                <img
+                                    src="/logo.png"
+                                    alt="Logo"
+                                    className="w-full h-full object-contain drop-shadow-md"
+                                />
                             </div>
                             <AnimatePresence mode="popLayout">
                                 {!isCompact && (
-                                    <motion.span
+                                    <motion.div
                                         initial={{ opacity: 0, width: 0 }}
                                         animate={{ opacity: 1, width: "auto" }}
                                         exit={{ opacity: 0, width: 0 }}
-                                        className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-yellow-400 tracking-tight whitespace-nowrap overflow-hidden ml-2"
+                                        className="hidden md:flex items-center gap-2 ml-2 font-titan select-none"
                                     >
-                                        CANZZY
-                                    </motion.span>
+                                        <div className="flex items-center">
+                                            {['C', 'A', 'N', 'Z', 'Z', 'Y'].map((char, i) => {
+                                                const colors = [
+                                                    'text-[#FF6B6B]', // C - Red/Orange
+                                                    'text-[#FFD93D]', // A - Yellow
+                                                    'text-[#FF8B3D]', // N - Orange
+                                                    'text-[#FFD93D]', // Z - Yellow
+                                                    'text-[#6BCB77]', // Z - Green
+                                                    'text-[#FF4D94]'  // Y - Pink
+                                                ];
+                                                return (
+                                                    <span
+                                                        key={i}
+                                                        className={`${colors[i]} text-4xl tracking-wide drop-shadow-[2px_2px_0_rgba(69,25,12,1)] transform hover:scale-110 transition-transform duration-300`}
+                                                        style={{
+                                                            WebkitTextStroke: '1.5px #45190C',
+                                                            textShadow: '2px 2px 0 #45190C'
+                                                        }}
+                                                    >
+                                                        {char}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    </motion.div>
                                 )}
                             </AnimatePresence>
                         </Link>

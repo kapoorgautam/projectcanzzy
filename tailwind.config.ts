@@ -15,6 +15,7 @@ const config: Config = {
             },
             fontFamily: {
                 outfit: ['var(--font-outfit)'],
+                titan: ['var(--font-titan-one)'],
             },
             animation: {
                 blob: "blob 7s infinite",

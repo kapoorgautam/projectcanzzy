@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Outfit, Titan_One } from "next/font/google";
 import "./globals.css";
 
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+  display: "swap",
+});
+
+const titanOne = Titan_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-titan-one",
   display: "swap",
 });
 
@@ -24,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.variable} antialiased`}>
+      <body className={`${outfit.variable} ${titanOne.variable} antialiased`}>
         <ThemeProvider>
           <SmoothScroll>
             {children}

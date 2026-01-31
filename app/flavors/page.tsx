@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useState } from 'react';
 import ProductModal from '@/components/ProductModal';
+import Image from 'next/image';
 
 function ProductCard({ product, index, onClick }: { product: Product; index: number; onClick: () => void }) {
     return (
@@ -21,10 +22,16 @@ function ProductCard({ product, index, onClick }: { product: Product; index: num
             <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${product.gradient}`} />
 
             <div className="p-6 flex flex-col flex-grow">
-                {/* Visual Placeholder - Reduced height */}
-                <div className={`w-full h-48 mb-6 rounded-2xl bg-gradient-to-br ${product.gradient} opacity-20 group-hover:opacity-30 transition-opacity flex items-center justify-center relative overflow-hidden`}>
-                    <div className={`absolute inset-0 bg-${product.themeColor.replace('#', '')} blur-3xl opacity-20`}></div>
-                    <ShoppingBag className={`w-12 h-12`} style={{ color: product.themeColor }} />
+                {/* Product Image */}
+                <div className={`w-full h-48 mb-6 rounded-2xl bg-white/50 dark:bg-white/5 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500`}>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-10`} />
+                    <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={200}
+                        height={200}
+                        className="object-contain w-full h-full p-4 drop-shadow-xl z-10"
+                    />
                 </div>
 
                 {/* Restored Text Sizes */}

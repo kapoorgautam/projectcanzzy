@@ -4,6 +4,7 @@ export interface Product {
     subName: string;
     price: string;
     description: string;
+    image: string;
     folderPath: string;
     frameCount: number;
     startFrame?: number;
@@ -41,6 +42,7 @@ export const products: Product[] = [
         category: "candy",
         price: "₹199",
         description: "Experience the nostalgic kick of raw mango with a modern candy twist.",
+        image: "/productimage/kacchamango.png",
         folderPath: "/images/kaccha-mango",
         frameCount: 200,
         startFrame: 0, // Skip intro splash frames
@@ -86,6 +88,7 @@ export const products: Product[] = [
         category: "candy",
         price: "₹199",
         description: "A burst of Nagpur oranges in every bite. Juicy, zesty, and refreshing.",
+        image: "/productimage/orange.png",
         folderPath: "/images/orange-blast",
         startFrame: 0,
         frameCount: 240,
@@ -131,6 +134,7 @@ export const products: Product[] = [
         category: "candy",
         price: "₹199",
         description: "A wild party of flavors in your mouth. Strawberry, Pineapple, and Green Apple in every chew.",
+        image: "/productimage/mixfruit.png",
         folderPath: "/images/mix-fruit",
         frameCount: 240,
         themeColor: "#ec4899", // Pink/Magenta for fruity vibe
@@ -175,6 +179,7 @@ export const products: Product[] = [
         category: "mouth-freshener",
         price: "₹249",
         description: "A royal blend of refreshing ingredients with the soothing aroma of sandalwood.",
+        image: "/productimage/chandan.png",
         folderPath: "/images/chandanmukhavas",
         frameCount: 240,
         startFrame: 0,

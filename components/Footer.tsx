@@ -36,13 +36,13 @@ export default function Footer() {
     };
 
     return (
-        <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-white/10 py-10 md:pt-20 md:pb-10 transition-colors duration-500">
+        <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-white/10 py-6 md:pt-10 md:pb-6 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-16">
                     <div className="col-span-1 md:col-span-2">
-                        <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-yellow-400 mb-4 md:mb-6">
-                            CANZZY
-                        </h2>
+                        <div className="mb-4 md:mb-6">
+                            <img src="/logo.png" alt="CANZZY" className="h-12 w-auto object-contain" />
+                        </div>
                         <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-sm mb-6 md:mb-8">
                             Revolutionizing the industry with authentic candies, premium mouth fresheners, and a tangy twist that keeps you coming back for more.
                         </p>
