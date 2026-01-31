@@ -87,7 +87,6 @@ export default function Footer() {
                                 title="Please enter a valid email address"
                                 value={newsletterEmail}
                                 onChange={(e) => setNewsletterEmail(e.target.value)}
-                                placeholder="Enter your email"
                                 className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-gray-900 dark:text-white focus:outline-none focus:border-lime-500 transition-colors"
                             />
                             <button

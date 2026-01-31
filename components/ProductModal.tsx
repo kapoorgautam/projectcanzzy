@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, Send, Heart, Globe } from 'lucide-react';
 import { Product } from '@/data/products';
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface ProductModalProps {
     product: Product;
@@ -94,7 +95,30 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                     <h2 className="text-3xl sm:text-4xl font-bold font-display mb-2 text-gray-900 dark:text-white pr-8">{product.name}</h2>
                                     <p className="text-sm font-bold uppercase tracking-widest text-lime-600 dark:text-lime-500 mb-6">{product.subName}</p>
 
-                                    <div className="mb-8">
+                                    <div className="flex justify-center mb-4 relative z-10 hidden md:flex">
+                                        <div className="relative w-full max-w-[80%] h-60 drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                                            <Image
+                                                src={product.image}
+                                                alt={product.name}
+                                                fill
+                                                className="object-contain"
+                                                priority
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center mb-4 relative z-10 md:hidden">
+                                        <div className="relative w-full h-48 drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                                            <Image
+                                                src={product.image}
+                                                alt={product.name}
+                                                fill
+                                                className="object-contain"
+                                                priority
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-6 relative z-10">
                                         <h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-gray-800 dark:text-gray-200">
                                             <Globe size={18} />
                                             {product.exportAppeal.title}
@@ -104,20 +128,6 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                         </p>
                                     </div>
 
-                                    <div className="bg-white dark:bg-white/5 rounded-2xl p-6 border border-gray-100 dark:border-white/5">
-                                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-200">
-                                            <Heart size={18} className="text-red-500" />
-                                            Health & Wellness
-                                        </h3>
-                                        <ul className="space-y-3">
-                                            {product.exportAppeal.healthBenefits.map((benefit, i) => (
-                                                <li key={i} className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400">
-                                                    <CheckCircle size={16} className="text-lime-500 mt-0.5 shrink-0" />
-                                                    <span>{benefit}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
                                 </div>
 
                                 {/* Right Side: Contact Form */}
@@ -145,7 +155,6 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                                     name="name"
                                                     required
                                                     type="text"
-                                                    placeholder="Your Name"
                                                     className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-lime-500 transition-colors"
                                                 />
                                             </div>
@@ -157,7 +166,6 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                                     type="tel"
                                                     pattern="^[0-9]{10}$"
                                                     title="Please enter a valid 10-digit phone number"
-                                                    placeholder="9876543210"
                                                     className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-lime-500 transition-colors"
                                                 />
                                             </div>
@@ -169,7 +177,6 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                                                     type="email"
                                                     pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                                     title="Please enter a valid email address"
-                                                    placeholder="your@email.com"
                                                     className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-lime-500 transition-colors"
                                                 />
                                             </div>

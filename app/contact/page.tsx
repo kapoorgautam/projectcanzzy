@@ -219,7 +219,6 @@ export default function ContactPage() {
                                                 type="text"
                                                 required
                                                 className="w-full bg-gray-50 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-lime-500 transition-colors"
-                                                placeholder="John Doe"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -231,7 +230,6 @@ export default function ContactPage() {
                                                 pattern="^[0-9]{10}$"
                                                 title="Please enter a valid 10-digit phone number"
                                                 className="w-full bg-gray-50 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-lime-500 transition-colors"
-                                                placeholder="9876543210"
                                             />
                                         </div>
                                         <div className="space-y-2 md:col-span-2">
@@ -243,7 +241,6 @@ export default function ContactPage() {
                                                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                                 title="Please enter a valid email address"
                                                 className="w-full bg-gray-50 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-lime-500 transition-colors"
-                                                placeholder="john@example.com"
                                             />
                                         </div>
                                     </div>
@@ -256,7 +253,6 @@ export default function ContactPage() {
                                                     name="company"
                                                     type="text"
                                                     className="w-full bg-gray-50 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-lime-500 transition-colors"
-                                                    placeholder="Your Business"
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -288,7 +284,6 @@ export default function ContactPage() {
                                             rows={4}
                                             required
                                             className="w-full bg-gray-50 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-lime-500 transition-colors"
-                                            placeholder="Tell us what you need..."
                                         />
                                     </div>
 
