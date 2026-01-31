@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Outfit, Titan_One } from "next/font/google";
 import "./globals.css";
 
+// Enable static generation for better performance
+export const dynamic = 'auto';
+
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
@@ -21,8 +24,8 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/ThemeProvider";
-import ThemeToggle from "@/components/ThemeToggle";
 import SmoothScroll from "@/components/SmoothScroll";
+import { ScrollProvider } from "@/context/ScrollContext";
 
 export default function RootLayout({
   children,
@@ -33,9 +36,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.variable} ${titanOne.variable} antialiased`}>
         <ThemeProvider>
-          <SmoothScroll>
-            {children}
-          </SmoothScroll>
+          <ScrollProvider>
+            <SmoothScroll>
+              {children}
+            </SmoothScroll>
+          </ScrollProvider>
         </ThemeProvider>
       </body>
     </html>

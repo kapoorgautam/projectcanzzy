@@ -2,6 +2,7 @@
 
 import { Facebook, Instagram, Twitter, Check } from 'lucide-react';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function Footer() {
     const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -41,7 +42,13 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-16">
                     <div className="col-span-1 md:col-span-2">
                         <div className="mb-4 md:mb-6">
-                            <img src="/logo.png" alt="CANZZY" className="h-12 w-auto object-contain" />
+                            <Image 
+                                src="/logo.webp" 
+                                alt="CANZZY" 
+                                width={48}
+                                height={48}
+                                className="h-12 w-auto object-contain"
+                            />
                         </div>
                         <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-sm mb-6 md:mb-8">
                             Revolutionizing the industry with authentic candies, premium mouth fresheners, and a tangy twist that keeps you coming back for more.

@@ -1,7 +1,7 @@
 'use client';
 
 import { useScroll } from 'framer-motion';
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { Product } from '@/data/products';
 import BackgroundParticles from './BackgroundParticles';
 
@@ -14,8 +14,13 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const frameCount = product.frameCount;
-    const [images, setImages] = useState<HTMLImageElement[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const imageCache = useRef<Map<number, HTMLImageElement>>(new Map());
+    const loadingQueue = useRef<Set<number>>(new Set());
+    const [currentFrame, setCurrentFrame] = useState(0);
+    const [isInitialized, setIsInitialized] = useState(false);
+    
+    // Preload nearby frames (buffer for smooth scrolling)
+    const PRELOAD_BUFFER = 5;
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -24,6 +29,25 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
 
     const startFrameIndex = (product.startFrame || 1);
     const endFrameIndex = frameCount;
+
+    // Lazy load image function
+    const loadImage = useCallback((frameIndex: number) => {
+        if (imageCache.current.has(frameIndex) || loadingQueue.current.has(frameIndex)) {
+            return;
+        }
+
+        loadingQueue.current.add(frameIndex);
+
+        const img = new window.Image();
+        img.src = `${product.folderPath}/${frameIndex}.webp`;
+        img.onload = () => {
+            imageCache.current.set(frameIndex, img);
+            loadingQueue.current.delete(frameIndex);
+        };
+        img.onerror = () => {
+            loadingQueue.current.delete(frameIndex);
+        };
+    }, [product.folderPath]);
 
     // Helper to draw image with object-fit: cover
     const drawImage = useCallback((ctx: CanvasRenderingContext2D, img: HTMLImageElement) => {
@@ -56,61 +80,47 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
 
     const renderFrame = useCallback((index: number) => {
         const canvas = canvasRef.current;
-        if (!canvas || images.length === 0) return;
+        if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Find the image for this frame
-        // Our images array is 0-indexed, but frames are 1-indexed (usually)
-        // Adjust logic based on how we store them
-        const img = images[index - 1]; // Assuming images are loaded sequentially corresponding to frame 1 to N
+        // Try to get cached image
+        const img = imageCache.current.get(index);
 
         if (img && img.complete) {
             // Set canvas size to match display size (for sharpness)
-            // But usually we want to keep it consistent. 
-            // Better to set internal resolution once or on resize.
-            // For now, let's just make sure it matches client size
             if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
                 canvas.width = canvas.clientWidth;
                 canvas.height = canvas.clientHeight;
             }
             drawImage(ctx, img);
+        } else {
+            // Render placeholder or clear canvas
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-    }, [images, drawImage]);
 
-    // Preload images
+        // Trigger loading of this frame if not already cached
+        if (!imageCache.current.has(index)) {
+            loadImage(index);
+        }
+    }, [drawImage, loadImage]);
+
+    // Initialize with first frame and preload nearby frames
     useEffect(() => {
-        let isMounted = true;
-        const loadImages = async () => {
-            const loadedImages: HTMLImageElement[] = [];
-            const promises: Promise<void>[] = [];
-
-            for (let i = 1; i <= frameCount; i++) {
-                const p = new Promise<void>((resolve) => {
-                    const img = new window.Image();
-                    img.src = `${product.folderPath}/${i}.jpg`;
-                    img.onload = () => resolve();
-                    // Keep order correct in array
-                    loadedImages[i - 1] = img;
-                });
-                promises.push(p);
-            }
-
-            await Promise.all(promises);
-
-            if (isMounted) {
-                setImages(loadedImages);
-                setIsLoaded(true);
-            }
-        };
-
-        loadImages();
-
+        loadImage(startFrameIndex);
+        setIsInitialized(true);
         return () => {
-            isMounted = false;
+            // Cleanup
+            imageCache.current.clear();
+            loadingQueue.current.clear();
         };
-    }, [product.folderPath, frameCount]);
+    }, [startFrameIndex, loadImage]);
 
 
     // Handle Resize
@@ -130,7 +140,7 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
 
     // Sync with scroll
     useEffect(() => {
-        if (!isLoaded || images.length === 0) return;
+        if (!isInitialized) return;
 
         // Draw initial frame
         renderFrame(startFrameIndex);
@@ -138,11 +148,22 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
         const unsubscribe = scrollYProgress.on("change", (latest) => {
             const frame = Math.floor(startFrameIndex + latest * (endFrameIndex - startFrameIndex));
             const safeFrame = Math.max(startFrameIndex, Math.min(endFrameIndex, frame));
+            
+            setCurrentFrame(safeFrame);
+
+            // Preload nearby frames
+            for (let i = -PRELOAD_BUFFER; i <= PRELOAD_BUFFER; i++) {
+                const frameToLoad = safeFrame + i;
+                if (frameToLoad >= startFrameIndex && frameToLoad <= endFrameIndex) {
+                    loadImage(frameToLoad);
+                }
+            }
+
             requestAnimationFrame(() => renderFrame(safeFrame));
         });
 
         return () => unsubscribe();
-    }, [scrollYProgress, isLoaded, images, startFrameIndex, endFrameIndex, renderFrame]);
+    }, [scrollYProgress, isInitialized, startFrameIndex, endFrameIndex, renderFrame, loadImage]);
 
     return (
         <div ref={containerRef} className="h-[500vh] relative">

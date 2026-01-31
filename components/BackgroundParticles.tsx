@@ -1,15 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 interface BackgroundParticlesProps {
     themeColor: string;
 }
 
 export default function BackgroundParticles({ themeColor }: BackgroundParticlesProps) {
-    // Generate random particles
-    const particleCount = 20;
+    // Generate random particles - reduced count on mobile
+    const getParticleCount = () => {
+        if (typeof window === 'undefined') return 15;
+        return window.innerWidth < 768 ? 8 : 15;
+    };
+
+    const particleCount = getParticleCount();
     const [particles, setParticles] = useState<{
         id: number;
         x: number;
@@ -29,7 +34,7 @@ export default function BackgroundParticles({ themeColor }: BackgroundParticlesP
             delay: Math.random() * 5,
         }));
         setParticles(newParticles);
-    }, []);
+    }, [particleCount]);
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
