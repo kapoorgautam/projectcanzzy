@@ -56,16 +56,17 @@ export default function ProductTextOverlays({ product }: ProductTextOverlaysProp
             <motion.div
                 style={{ opacity, y }}
                 className={`fixed inset-0 flex flex-col justify-center pointer-events-none ${alignmentClasses[align]} z-10 px-4`}
+                initial={false}
             >
                 <div className="flex flex-col items-center md:items-start w-full">
-                    <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-gray-900 dark:text-white drop-shadow-2xl mb-2 md:mb-4 transition-colors duration-500 text-center md:text-left w-full">
+                    <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-gray-900 dark:text-white drop-shadow-2xl mb-2 md:mb-4 transition-colors duration-500 text-center md:text-left w-full will-change-transform">
                         {title}
                     </h2>
                     <p className="text-lg md:text-3xl text-lime-600 dark:text-lime-400 font-bold max-w-lg drop-shadow-lg mb-4 md:mb-6 transition-colors duration-500 text-center md:text-left w-full">
                         {subtitle}
                     </p>
                     {extraText && (
-                        <h3 className="text-3xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] animate-pulse text-center w-full mb-8 md:mb-0">
+                        <h3 className="text-3xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] text-center w-full mb-8 md:mb-0">
                             {extraText}
                         </h3>
                     )}
@@ -85,7 +86,7 @@ export default function ProductTextOverlays({ product }: ProductTextOverlaysProp
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 10 }}
-                        transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
+                        transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }}
                         className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex flex-col items-center md:hidden"
                     >
                         <span className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Scroll</span>

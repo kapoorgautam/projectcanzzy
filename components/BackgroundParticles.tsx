@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 
 interface BackgroundParticlesProps {
     themeColor: string;
@@ -10,8 +10,8 @@ interface BackgroundParticlesProps {
 export default function BackgroundParticles({ themeColor }: BackgroundParticlesProps) {
     // Generate random particles - reduced count on mobile
     const getParticleCount = () => {
-        if (typeof window === 'undefined') return 15;
-        return window.innerWidth < 768 ? 8 : 15;
+        if (typeof window === 'undefined') return 12;
+        return window.innerWidth < 768 ? 6 : 12;
     };
 
     const particleCount = getParticleCount();
@@ -23,14 +23,19 @@ export default function BackgroundParticles({ themeColor }: BackgroundParticlesP
         duration: number;
         delay: number;
     }[]>([]);
+    
+    const particlesRef = useRef(false);
 
     useEffect(() => {
+        if (particlesRef.current) return;
+        particlesRef.current = true;
+        
         const newParticles = Array.from({ length: particleCount }).map((_, i) => ({
             id: i,
             x: Math.random() * 100, // %
             y: Math.random() * 100, // %
-            size: Math.random() * 10 + 5, // px
-            duration: Math.random() * 10 + 10, // seconds
+            size: Math.random() * 8 + 4, // px - reduced size
+            duration: Math.random() * 12 + 15, // seconds - longer duration = fewer repaints
             delay: Math.random() * 5,
         }));
         setParticles(newParticles);
@@ -48,12 +53,13 @@ export default function BackgroundParticles({ themeColor }: BackgroundParticlesP
                         top: `${p.y}%`,
                         width: p.size,
                         height: p.size,
+                        willChange: 'transform',
                     }}
                     animate={{
-                        y: [0, -100, 0], // Float up and down slightly
-                        x: [0, Math.random() * 50 - 25, 0], // Drift sideways
-                        opacity: [0.1, 0.3, 0.1],
-                        scale: [1, 1.5, 1],
+                        y: [0, -80, 0],
+                        x: [0, Math.random() * 30 - 15, 0],
+                        opacity: [0.1, 0.25, 0.1],
+                        scale: [1, 1.3, 1],
                     }}
                     transition={{
                         duration: p.duration,
@@ -63,14 +69,20 @@ export default function BackgroundParticles({ themeColor }: BackgroundParticlesP
                     }}
                 />
             ))}
-            {/* Ambient Glows */}
+            {/* Ambient Glows - CSS animation instead of Framer Motion */}
             <div
-                className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[100px] opacity-20 animate-pulse"
-                style={{ backgroundColor: themeColor }}
+                className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[100px] opacity-15 pointer-events-none"
+                style={{ 
+                    backgroundColor: themeColor,
+                    animation: 'glow 8s ease-in-out infinite',
+                }}
             />
             <div
-                className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-[80px] opacity-15 animate-pulse"
-                style={{ backgroundColor: themeColor, animationDelay: '2s' }}
+                className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-[80px] opacity-10 pointer-events-none"
+                style={{ 
+                    backgroundColor: themeColor,
+                    animation: 'glow 10s ease-in-out infinite 2s',
+                }}
             />
         </div>
     );

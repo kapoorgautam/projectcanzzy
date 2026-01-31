@@ -8,15 +8,17 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 
-// Throttle utility
+// Throttle utility - optimized for better performance
 const throttle = (func: Function, limit: number) => {
     let inThrottle: boolean;
+    let lastResult: any;
     return function (this: any, ...args: any[]) {
         if (!inThrottle) {
-            func.apply(this, args);
+            lastResult = func.apply(this, args);
             inThrottle = true;
             setTimeout(() => inThrottle = false, limit);
         }
+        return lastResult;
     };
 };
 
@@ -41,7 +43,7 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
             } else if (direction === 'up') {
                 setIsCompact(false);
             }
-        }, 50); // Throttle to 50ms
+        }, 100); // Increased throttle to 100ms for better performance
 
         return scrollY.on('change', handleScroll as any);
     }, [scrollY]);

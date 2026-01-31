@@ -18,9 +18,13 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
     const loadingQueue = useRef<Set<number>>(new Set());
     const [currentFrame, setCurrentFrame] = useState(0);
     const [isInitialized, setIsInitialized] = useState(false);
+    const rafId = useRef<number | null>(null);
     
-    // Preload nearby frames (buffer for smooth scrolling)
-    const PRELOAD_BUFFER = 5;
+    // Preload nearby frames (buffer for smooth scrolling) - reduced for better performance
+    const PRELOAD_BUFFER = 3;
+    
+    // Cache max size to prevent memory issues
+    const CACHE_MAX_SIZE = 50;
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -30,7 +34,7 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
     const startFrameIndex = (product.startFrame || 1);
     const endFrameIndex = frameCount;
 
-    // Lazy load image function
+    // Lazy load image function with memory management
     const loadImage = useCallback((frameIndex: number) => {
         if (imageCache.current.has(frameIndex) || loadingQueue.current.has(frameIndex)) {
             return;
@@ -43,6 +47,14 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
         img.onload = () => {
             imageCache.current.set(frameIndex, img);
             loadingQueue.current.delete(frameIndex);
+            
+            // Memory management: clear old frames when cache gets too large
+            if (imageCache.current.size > CACHE_MAX_SIZE) {
+                const firstKey = imageCache.current.keys().next().value;
+                if (firstKey !== undefined) {
+                    imageCache.current.delete(firstKey);
+                }
+            }
         };
         img.onerror = () => {
             loadingQueue.current.delete(frameIndex);
@@ -138,7 +150,7 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
     }, []);
 
 
-    // Sync with scroll
+    // Sync with scroll - optimized with requestAnimationFrame
     useEffect(() => {
         if (!isInitialized) return;
 
@@ -149,20 +161,31 @@ export default function ProductCandyScroll({ product }: ProductCandyScrollProps)
             const frame = Math.floor(startFrameIndex + latest * (endFrameIndex - startFrameIndex));
             const safeFrame = Math.max(startFrameIndex, Math.min(endFrameIndex, frame));
             
-            setCurrentFrame(safeFrame);
+            // Only update state if frame actually changed
+            setCurrentFrame(prev => prev !== safeFrame ? safeFrame : prev);
 
-            // Preload nearby frames
-            for (let i = -PRELOAD_BUFFER; i <= PRELOAD_BUFFER; i++) {
+            // Cancel previous frame request to avoid stuttering
+            if (rafId.current) {
+                cancelAnimationFrame(rafId.current);
+            }
+
+            // Preload nearby frames strategically (only forward direction)
+            for (let i = 0; i <= PRELOAD_BUFFER; i++) {
                 const frameToLoad = safeFrame + i;
                 if (frameToLoad >= startFrameIndex && frameToLoad <= endFrameIndex) {
                     loadImage(frameToLoad);
                 }
             }
 
-            requestAnimationFrame(() => renderFrame(safeFrame));
+            rafId.current = requestAnimationFrame(() => renderFrame(safeFrame));
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribe();
+            if (rafId.current) {
+                cancelAnimationFrame(rafId.current);
+            }
+        };
     }, [scrollYProgress, isInitialized, startFrameIndex, endFrameIndex, renderFrame, loadImage]);
 
     return (
