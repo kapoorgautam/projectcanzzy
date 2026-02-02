@@ -318,8 +318,8 @@ function HomeContent() {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 md:mb-16 text-gray-900 dark:text-white">Our Sweet Range</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {[
-                  { name: "Tangy Candies", color: "bg-pink-100 dark:bg-pink-900/20", text: "text-pink-700 dark:text-pink-400", link: "/flavors", icon: Candy, image: "/productimage/mixfruit.png", status: "active" },
-                  { name: "Mouth Fresheners", color: "bg-emerald-100 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", link: "/flavors", icon: Leaf, image: "/productimage/chandan.png", status: "active" },
+                  { name: "Tangy Candies", color: "bg-pink-100 dark:bg-pink-900/20", text: "text-pink-700 dark:text-pink-400", link: "/flavors", icon: Candy, image: "/productimage/mixfruit.webp", status: "active" },
+                  { name: "Mouth Fresheners", color: "bg-emerald-100 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", link: "/flavors", icon: Leaf, image: "/productimage/chandan.webp", status: "active" },
                   { name: "Fun Snacks", color: "bg-orange-100 dark:bg-orange-900/20", text: "text-orange-700 dark:text-orange-400", link: "/exports/snacks", icon: IceCream, status: "coming_soon" },
                   { name: "Gift Packs", color: "bg-yellow-100 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-400", link: "/contact", icon: Box, status: "coming_soon" }
                 ].map((cat, i) => (

@@ -1,11 +1,26 @@
 'use client';
 
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Menu, X, MessageCircle } from 'lucide-react';
+import { Menu, X, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
+
+// Throttle utility - optimized for better performance
+const throttle = (func: Function, limit: number) => {
+    let inThrottle: boolean;
+    let lastResult: any;
+    return function (this: any, ...args: any[]) {
+        if (!inThrottle) {
+            lastResult = func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+        return lastResult;
+    };
+};
 
 export default function Navbar({ hidden = false }: { hidden?: boolean }) {
     const { scrollY } = useScroll();
@@ -13,11 +28,13 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
     const [isCompact, setIsCompact] = useState(false);
     const [isAtTop, setIsAtTop] = useState(true);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const previousScroll = useRef(0);
 
     useEffect(() => {
-        return scrollY.on('change', (latest) => {
-            const previous = scrollY.getPrevious() || 0;
+        const handleScroll = throttle((latest: number) => {
+            const previous = previousScroll.current;
             const direction = latest > previous ? 'down' : 'up';
+            previousScroll.current = latest;
 
             setIsAtTop(latest <= 50);
 
@@ -26,7 +43,9 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
             } else if (direction === 'up') {
                 setIsCompact(false);
             }
-        });
+        }, 100); // Increased throttle to 100ms for better performance
+
+        return scrollY.on('change', handleScroll as any);
     }, [scrollY]);
 
     const handleLogoClick = (e: React.MouseEvent) => {
@@ -72,10 +91,13 @@ export default function Navbar({ hidden = false }: { hidden?: boolean }) {
                             onClick={handleLogoClick}
                         >
                             <div className="w-12 h-12 relative animate-bounce-slow">
-                                <img
-                                    src="/logo.png"
+                                <Image
+                                    src="/logo.webp"
                                     alt="Logo"
+                                    width={48}
+                                    height={48}
                                     className="w-full h-full object-contain drop-shadow-md"
+                                    priority
                                 />
                             </div>
                             <AnimatePresence mode="popLayout">
